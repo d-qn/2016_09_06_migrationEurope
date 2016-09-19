@@ -1,0 +1,156 @@
+---
+title: "01_getEuropeanMigrationData"
+author: "Duc-Quang Nguyen | swissinfo.ch"
+date: " 2016"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+    theme: simplex
+---
+
+## Data source
+
+ * [Population on 1 January by five year age group, sex and citizenship](http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en)
+ * [Immigration by five year age group, sex and country of birth](http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_imm3ctb&lang=en) This dataset seems less complete
+
+## Related
+
+* [Metrocosm Which EU Country Has the Most Citizens Living Abroad?](http://metrocosm.com/eu-diaspora-map/)
+* [Metrocosm The Ins and Outs of Immigration in the European Union](http://metrocosm.com/mapping-eu-immigration/)
+* [Intra-european living elsewhere](http://www.economist.com/news/europe/21704813-eus-cherished-free-movement-rights-are-less-secure-they-seem-europes-scapegoat)
+
+![chart](inspirations/20160813_EUC318.png)
+
+![eurostatTable](inspirations/Main_countries_of_citizenship_and_birth_of_the_foreign_foreign-born_population,_1_January_2015_(¹)_(in_absolute_numbers_and_as_a_percentage_of_the_total_foreign_foreign-born_population)_YB16.png)
+
+
+```{r setup, include=FALSE}
+downloadData <- F
+
+iso2.sub <- c('CH', 'DE', 'IT', 'UK', 'PT', 'ES', 'SE', 'RO')
+
+eu.pop.data.file <- "data/eurostat_pop_all.csv"
+
+euefta.outfile <- "intput/euefta_pop.csv"
+all.pop.outfile <- "intput/data_pop.csv"
+
+# Eurostat data tables
+es.tb <- c('migr_pop1ctz')
+
+
+library(readr)
+library(tidyr)
+library(dplyr)
+library(magrittr)
+library(countrycode)
+library(ggplot2)
+library(scales)
+library(swiMap)
+library(swiTheme)
+library(forcats)
+
+### Getting data in packages
+library(eurostat)
+# ### Interactive 
+# library(htmltools)
+# library(shiny)
+# library(swiRcharts)
+# library(rCharts)
+
+### Misc stuff
+require(forcats)
+```
+
+
+### Get/load data
+
+```{r load data, include = F}
+### Get data from Eurostat
+if(downloadData) {
+  dat <- get_eurostat(es.tb, time_format = "raw", cache = F, keepFlags = T)
+  
+  # wrange & discard 
+  data <- label_eurostat(dat %>% select(-flags), eu_order = T, code = c("citizen", "geo"))
+  data$time <- as.numeric(data$time)
+  # # add back data flags ??
+  # data$flags <- dat$flags
+  data %<>% 
+    select (-unit) %>% filter(age == "Total", sex == "Total") %>%
+    select (-age, -sex)
+  write.csv(data, eu.pop.data.file, row.names = F)
+} else {
+  data <- read.csv(eu.pop.data.file)
+}
+```
+
+## remove useless aggregate citizenship
+```{r massive wrangle}
+agg.idx <- which(nchar(levels(data$citizen_code)) > 2)
+
+#data[match(levels(data$citizen_code)[agg.idx], data$citizen_code),c("citizen", "citizen_code")]
+agg.iso2 <- levels(data$citizen_code)[agg.idx]
+iso2.keep <- c("NAT", "FOR", "EFTA_FOR", "EU28_FOR", "TOTAL")
+agg.iso2 <- agg.iso2[!agg.iso2 %in% iso2.keep]
+
+
+# Place aggregates as new columns
+data %<>% filter(time == 2015) %>% select(-time)
+
+data %<>%
+  group_by(geo_code, geo) %>% 
+  mutate(
+    TOTAL = sum(values[citizen_code == "TOTAL"], na.rm = T),
+    NAT = sum(values[citizen_code == "NAT"], na.rm = T),
+    FOR = sum(values[citizen_code == "FOR"], na.rm = T),
+    EFTA_FOR = sum(values[citizen_code == "EFTA_FOR"], na.rm = T),
+    EU28_FOR = sum(values[citizen_code == "EU28_FOR"], na.rm = T)
+  ) %>% ungroup() %>% filter(!citizen_code %in% levels(data$citizen_code)[agg.idx])
+
+
+# remove the national values for each country and ensure NAT is equal to it!!
+data <- do.call(rbind, by(data, data$geo_code, function(dd) {
+  geoiso <- as.character(dd$geo_code[1])
+  #cat("\n", geoiso)
+  cit.value <- unlist(dd[which(dd$citizen_code == geoiso), 'values'])
+  if(length(cit.value) > 0) {
+    if(cit.value != dd$NAT[1]) {
+    warning("\n", geoiso, "\t citizen:", cit.value, "\t NAT: ", dd$NAT[1])
+    }    
+  }
+  dd[dd$citizen_code != geoiso,]
+}))
+
+
+data %>% filter(geo_code == "CH") %>% as.data.frame()
+ 
+data %>% filter(geo_code %in% iso2.sub) %>% group_by(citizen_code, citizen) %>%
+  summarise(tot = sum(values)) %>% ungroup() %>% arrange(desc(tot)) %>% head(20)
+
+```
+
+
+## Compute the sum for EU-28 + EFTA
+```{r wrangle, results='asis'}
+eu.ct <- c(eu_countries[,1], efta_countries[,1])
+
+## for all EU & EFTA countries check how complete is the citizen data
+eu.test <- data %>% filter(geo_code %in% eu.ct) %>% group_by(geo_code) %>%
+  summarise(forNat = length(values)) %>% ungroup() %>% as.data.frame()
+
+cat("### countries missing !!!!")
+cat(eu.ct[!eu.ct %in% eu.test$geo_code])
+
+eu <- data %>% filter(geo_code %in% eu.ct) %>% group_by(citizen) %>%
+  summarise(totNat = sum(values)) %>% ungroup() %>% arrange(desc(totNat)) %>%
+  mutate(TOT = sum(totNat))
+
+eu$citizen_code <- as.character(unlist(data[match(eu$citizen, data$citizen), 'citizen_code']))
+eu$share <- eu$totNat / eu$TOT
+eu$euefta <- eu$citizen_code %in% eu.ct
+eu$region <- countrycode(eu$citizen_code, "iso2c", "region")
+write_csv(eu, )
+
+```
+
+
