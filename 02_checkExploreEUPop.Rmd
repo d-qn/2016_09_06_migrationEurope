@@ -1,0 +1,204 @@
+---
+title: "02_checkExploreEUPop"
+author: "Duc-Quang Nguyen"
+date: "19 September 2016"
+output: html_document
+---
+
+## Resources
+
+* [Libre circulation](http://www.touteleurope.eu/les-politiques-europeennes/marche-interieur/synthese/la-libre-circulation-des-personnes.html)
+
+
+## Text snippets
+
+Nationalité des ressortissants. Pour les pays pour lequels procesus naturalisation facile, part d'étrangers. 
+
+
+```{r setup, include=FALSE}
+printTest <- F
+iso2.sub <- c('CH', 'DE', 'IT', 'GB', 'ES',  'PT','AT', 'RO')
+
+infile <- "input/data_pop_2015.csv"
+
+library(readr)
+library(tidyr)
+library(dplyr)
+library(magrittr)
+library(countrycode)
+library(ggplot2)
+library(scales)
+library(swiMap)
+library(swiTheme)
+library(forcats)
+library(RColorBrewer)
+### Getting data in packages
+library(eurostat)
+library(waffle)
+library(htmltools)
+library(swiRcharts)
+
+```
+
+```{r load data, echo = F, message = F}
+data <- read_csv(infile)
+
+# hack for UK and GR iso code 
+data$citizen_code<- gsub("UK", "GB", data$citizen_code)
+data$geo_code<- gsub("UK", "GB", data$geo_code)
+data$citizen_code<- gsub("EL", "GR", data$citizen_code)
+data$geo_code<- gsub("EL", "GR", data$geo_code)
+
+eu.ct <- c(eu_countries[,1], efta_countries[,1])
+eu.ct <- gsub("UK", "GB", eu.ct)
+eu.ct <- gsub("EL", "GR", eu.ct)
+
+# Some test
+if(printTest) {
+data %>% filter(geo_code == "CH") %>% as.data.frame()
+data %>% filter(geo_code %in% iso2.sub) %>% group_by(citizen_code, citizen) %>%
+  summarise(tot = sum(values)) %>% ungroup() %>% arrange(desc(tot)) %>% head(20)  
+}
+
+```
+### Compute the sum for EU-28 + EFTA
+
+```{r get EU & EFTA totals, results='asis'}
+
+## for all EU & EFTA countries check how complete is the citizen data
+eu.test <- data %>% filter(geo_code %in% eu.ct) %>% group_by(geo_code) %>%
+  summarise(forNat = length(values)) %>% ungroup() %>% as.data.frame()
+
+cat("### countries missing !!!!")
+cat(eu.ct[!eu.ct %in% eu.test$geo_code])
+
+eu <- data %>% filter(geo_code %in% eu.ct) %>% group_by(citizen) %>%
+  summarise(totNat = sum(values)) %>% ungroup() %>% arrange(desc(totNat)) %>%
+  mutate(TOT = sum(totNat))
+
+eu$citizen_code <- as.character(unlist(data[match(eu$citizen, data$citizen), 'citizen_code']))
+eu$share <- eu$totNat / eu$TOT
+eu$euefta <- eu$citizen_code %in% eu.ct
+eu$region <- countrycode(eu$citizen_code, "iso2c", "region")
+eu$continent <- countrycode(eu$citizen_code, "iso2c", "continent")
+
+if(printTest) {
+  head(eu, 20)
+}
+
+library(treemap)
+library(highcharter)
+
+dff <- treemap(eu, draw = T, index = c("continent", "region", "citizen"), vSize = "totNat", type = "index")
+```
+
+
+
+```{r prepare data for waffle chart, echo = F}
+
+# compute the sum EFTA + EU-28 foreigners by country
+data$EUEFTA <- data$EFTA_FOR + data$EU28_FOR
+data %<>% select(-EFTA_FOR, -EU28_FOR) 
+
+#dd <- data %>% filter(geo_code == "IT") %>% arrange(desc(values))
+
+mergeCit <- function(df, n = 6, base = 1000) {
+  df %<>% arrange(desc(values))
+  topN <- df %>% select(citizen_code) %>% head(n) %>% unlist(use.names = F)
+  
+  # get the total for EUEFTA and non-EU/EFTA countries
+  euefta <- df %>% filter(citizen_code %in% topN, citizen_code %in% eu.ct) %>% summarise(tot = sum(values)) %>% unlist()
+  non_euefta <- df %>% filter(citizen_code %in% topN, !citizen_code %in% eu.ct) %>% summarise(tot = sum(values)) %>% unlist()
+  non_euefta
+  ddd <- df %>% select(citizen_code, geo_code, values, TOTAL, FOR) %>% filter(citizen_code %in% topN)
+  
+  ddd <- rbind(ddd, 
+        data.frame(citizen_code = "other_EUEFTA", geo_code = ddd$geo_code[1],  TOTAL = ddd$TOTAL[1], FOR = ddd$FOR[1], values = df$EUEFTA[1] - euefta),
+        data.frame(citizen_code = "others", geo_code = ddd$geo_code[1],  TOTAL = ddd$TOTAL[1], FOR = ddd$FOR[1], values = df$FOR[1] - non_euefta- df$EUEFTA[1])
+  )
+  
+  ddd$share <- round((ddd$values / ddd$TOTAL) * base)
+  ddd
+}
+
+### Subset data by iso2.sub and merge foreigner citizenships! 
+dd <- filter(data, geo_code %in% iso2.sub)
+df <- do.call(rbind, by(dd, dd$geo_code, mergeCit))
+
+# Get all foreign nationality
+cit <- df %>% group_by(citizen_code) %>% summarise(tot = sum(share)) %>%
+  ungroup() %>% arrange(desc(tot))
+
+colors <- c( "#dbd6db", "#e5dbcd",
+            "#ab3d3f", "#666699", "#669999", "#663333", "#336666", "#366096", "#333366", "#996699", "#ac673e", "#3a9736", "#999966", "#666633", "#89a23a", "#368596", "#996666", 
+            brewer.pal(name = "Set3", n = 12))
+cit$color <-  c(colors, colorRampPalette(colors = c("#336666", "#ab3d3f"))(nrow(cit)- length(colors)))
+
+totF <- df %>% group_by(geo_code) %>% summarise(tot = sum(share)) %>% ungroup() %>% arrange(desc(tot))
+
+
+wtheme <- function(title.font = "OpenSans-CondensedBold", base.font = "OpenSans-CondensedLight") {
+  theme(
+    plot.title = element_text(family = title.font, size = 25),
+    legend.text = element_text(family = base.font, size = 16),
+    legend.key.width = unit(0.7, "lines"),
+    legend.key.height = unit(1, "lines")
+  ) 
+}
+
+```
+
+## waffle chart
+
+```{r waffle chart}
+nrow <- 5
+size <- 1
+ncol <- floor(max(totF$tot) / nrow)
+
+lang <- 'EN'
+
+# Loop by iso2 and create the 
+wf <- lapply(totF$geo_code, function(iso) {
+  iso <- gsub("UK", "GB", iso)
+  cat("\n", iso)
+  
+  ddd <- filter(df, geo_code == iso, share > 0)
+  # order whether citizen is a EUFTA or not country
+  eu.log <- ddd$citizen_code %in% c(eu.ct, "other_EUEFTA") 
+  ddd <- ddd[c(which(eu.log), which(!eu.log)),]
+  
+  dddd <- structure(ddd$share, names = ifelse(is.na(countrycode(ddd$citizen_code, "iso2c", "country.name")), ddd$citizen_code, countrycode(ddd$citizen_code, "iso2c", "country.name")))
+  
+  pad <- ncol - floor(sum(ddd$share) / nrow)
+  
+  waffle(dddd, rows = nrow , size=size, pad = pad, colors = cit[match(ddd$citizen_code, cit$citizen_code), 'color'] %>% unlist(use.names = F), legend_pos = "top", 
+         title = countrycode(iso, "iso2c", "country.name"), xlab = "\n") + wtheme()
+
+})
+
+w.path <- paste0("output/waffle_chart_" , lang, ".png")
+w.html <- paste0("waffle_charts_" , lang, ".html")
+
+
+png(w.path,  res = 250, pointsize = 12, height = 4000, 
+    width = 2000)
+iron(wf[[1]], wf[[2]], wf[[3]], wf[[4]], wf[[5]], wf[[6]], wf[[7]],  wf[[8]])
+dev.off()
+
+
+save_html(
+  tags$html(
+   tags$head(includeHTML("styles.html")),
+    tags$body(    
+     # h2(txt["title2", lang]),
+      #div(class = "descr", HTML(txt["descr2", lang])),
+      div(img(src = basename(w.path), width= "100%")),
+      HTML(iframeresizer)  
+    )), file = w.html
+)
+    
+# move stuff
+file.rename(from = w.html, to = paste0("output/", w.html))    
+    
+```
+

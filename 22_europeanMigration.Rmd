@@ -1,0 +1,187 @@
+---
+title: "European Migration "
+author: "Duc-Quang Nguyen"
+date: "17 Aug 2016"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+    theme: journal
+---
+
+
+## Data
+
+### Main source
+ * [Population on 1 January by five year age group, sex and citizenship](http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en)
+
+# Code
+
+### Packages & settings
+
+```{r setup, include=FALSE}
+downloadData <- F
+plotTest <- T
+
+eu.migr.data.file <- "data/eurostat_migration.csv"
+# Eurostat data tables
+es.tb <- c('migr_pop1ctz')
+
+library(eurostat)
+library(readr)
+library(tidyr)
+library(dplyr)
+library(magrittr)
+library(countrycode)
+library(ggplot2)
+library(scales)
+library(swiMap)
+library(swiTheme)
+library(forcats)
+
+### Interactive 
+library(htmltools)
+library(swiRcharts)
+library(chorddiag)
+library(htmlwidgets)
+```
+
+### Get/load data
+
+```{r load data, include = F}
+### Get data from Eurostat
+if(downloadData) {
+  dat <- get_eurostat(es.tb, time_format = "raw", cache = F, keepFlags = T)
+  
+  # wrange & discard 
+  data <- cbind(label_eurostat(dat %>% select(-flags)), iso2 = dat$geo)
+  data$time <- as.numeric(data$time)
+  # add back data flags
+  data$flags <- dat$flags
+  data %<>% 
+    select (-unit) %>% filter(age == "Total", sex == "Total") %>%
+    select (-age, -sex)
+  write.csv(data, eu.migr.data.file, row.names = F)
+} else {
+  data <- read.csv(eu.migr.data.file)
+}
+```
+
+```{r check & explore data, include = F}
+# Aggregated citizen categories
+
+agg.ori <- c('Total', 'Reporting country', 'Foreign country', 
+             'EU-28 countries except reporting country', 'Non-EU-28 countries nor reporting country', 
+             'European Free Trade Association except reporting country', 'Stateless', 'Unknown', NA,
+             'Recognised Non-Citizens', 'Others')
+             
+agg.geo <- c('Other european countries (aggregate changing according to the context)',
+             'Europe', 'Other european countries (aggregate changing according to the context)',
+             'Africa', 'Eastern Africa', 'Northern Africa', 'Central Africa', 'Southern Africa',
+             'Western Africa', 'Other African countries (aggregate changing according to the context)',
+             'America', 'Northern America', 'Central America', 'Caribbean', 'South America',
+             'Other American countries (aggregate changing according to the context)',
+             'Asia', 'Eastern Asia', 'South-Eastern Asia', 'Southern Asia', 'Western Asia',
+             'Central Asia', 'Other Asian countries (aggregate changing according to the context)',
+             'Oceania', 'Australia and New Zealand', 
+             'Polynesia', 'Other Oceanian countries (aggregate changing according to the context)',
+             'French Southern Territories (FR)')
+
+             
+     
+agg.adm <- c(             
+  "European Union (27 countries)", "EU-27 countries except reporting country",
+  "Extra EU-27", "Non-EU-27 countries nor reporting country",
+  "European Union (25 countries)", "EU-25 countries except reporting country",
+  "European Union (15 countries)", "EU-15 countries except reporting country",
+  "European Free Trade Association", "Candidate countries in 2007 (3 countries)",
+  "Countries other than EU-27, EFTA and Candidate countries",
+  "Highly developed countries (other than EU-27, EFTA and Candidate countries)",
+  "Medium developed countries (other than EU-27, EFTA and Candidate countries)",
+  "Less developed countries (other than EU-27, EFTA and Candidate countries)",
+  "Candidate countries in 2010 (4 countries)"
+)
+agg.all <- unique(c(agg.ori, agg.geo, agg.adm))
+unk.agg <- c('Stateless', 'Unknown', NA,
+             'Recognised Non-Citizens', 'Others')
+
+
+## Check sum of all non aggregate citizenship == Total
+# add total column 
+tt <- data %>% group_by(geo, iso2, time) %>% 
+  summarise(
+    total = sum(values[which(citizen == "Total")], na.rm = T), 
+    national = sum(values[which(citizen == "Reporting country")], na.rm = T),
+    foreign = sum(values[which(citizen == "Foreign country")], na.rm = T)
+    ) %>% ungroup()
+
+tt$totTest <- tt$national + tt$foreign
+tt$totErr <- ((tt$totTest - tt$total) / tt$total)* 100
+summary(tt$totErr)
+
+
+tt <- left_join(tt, data %>% filter(!citizen %in% agg.all | citizen %in% unk.agg) %>%
+  group_by(geo, iso2, time) %>% 
+  summarise(sumFor = sum(values, na.rm =T)) %>% ungroup())
+
+tt$err <- ((tt$total - tt$sumFor) / tt$total) * 100
+summary(tt$err)
+hist(tt$err, breaks= 100)
+
+
+
+
+
+
+
+## check reporting and foreign country == total
+repFor <- data %>% filter(citizen %in% c('Reporting country', 'Foreign country', 'Unknown')) %>%
+  group_by(geo, iso2, time) %>%
+  summarise(repPlusFor = sum(values, na.rm = T)) %>% ungroup()
+
+tot <- data %>% filter(citizen == 'Total') %>%
+  group_by(geo, iso2, time) %>%
+  summarise(tot = sum(values, na.rm = T)) %>% ungroup()
+
+test.df <- left_join(repFor, tot)
+test.df$dif <- test.df$tot - test.df$repPlusFor
+test.df$err <-  (test.df$dif / test.df$tot) * 100
+summary(test.df$dif)
+
+test.df[which(abs(test.df$err) > 1),]
+
+## check foreign == EU-28 + Non-EU-28
+tmp1 <- data %>% filter(citizen == 'Foreign country') %>%
+  mutate(totFor = values) %>% select(geo, time, iso2, totFor)
+
+tmp2 <- data %>% filter(citizen %in% c('EU-28 countries except reporting country', 'Non-EU-28 countries nor reporting country', NA, "Unknown")) %>% 
+  group_by(geo, time, iso2) %>%
+  summarise(euPlusNon = sum(values, na.rm = T)) %>% 
+  select(geo, time, iso2, euPlusNon)
+
+dt <- left_join(tmp1, tmp2)
+dt$dif <- dt$euPlusNon - dt$totFor
+dt$err <- (dt$dif / dt$totFor) * 100
+summary(dt$err)
+
+dt[which(abs(dt$err) > 1),]
+
+#proportion of foreingers over time
+tmp1 <- data %>% filter(citizen %in% c('Foreign country', 'Unknown')) %>%
+    group_by(geo, iso2, time) %>%
+    mutate(foreigners = sum(values, na.rm = T)) %>% ungroup() %>% select(-citizen, -values)
+
+tmp2 <- data %>% filter(citizen == "Total") %>%
+    group_by(geo, iso2, time) %>%
+    mutate(total = sum(values, na.rm = T)) %>% ungroup() %>% select(-citizen, -values)
+
+dd <- left_join(tmp1, tmp2)
+dd$pc <- dd$foreigners / dd$total
+
+if(plotTest) {
+ggplot(data = dd, aes(time, pc)) + geom_line(aes(group = geo, colour = geo)) + 
+    facet_wrap(~ geo) + swi_theme()  
+}
+
+
+```

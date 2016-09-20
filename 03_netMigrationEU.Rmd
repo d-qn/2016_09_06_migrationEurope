@@ -1,0 +1,144 @@
+---
+title: "03_map_EU_netMigration"
+author: "Duc-Quang Nguyen"
+date: "20 September 2016"
+output: html_document
+---
+
+
+## Resources
+
+* [Eurostat geodata](http://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts)
+* [Crude rates of population change by NUTS 2 region](http://ec.europa.eu/eurostat/web/products-datasets/-/tgs00099)
+# [NUTS geo](http://ec.europa.eu/eurostat/web/products-manuals-and-guidelines/-/KS-GQ-14-006)
+
+
+```{r setup, include=FALSE}
+downloadData <- F
+
+eu.tgs00099.file <- "data/all_tgs00099.csv"
+eu.migration.file <- "data/migration.2014.csv"
+eu.geodata.file <- "input/eurostat_NUTS_geodata"
+
+colourText_bkbg <- '#ffffff'
+border.color <- "#404040"
+
+
+# Eurostat data tables
+es.tb <- c('tgs00099')
+
+library(readr)
+library(tidyr)
+library(dplyr)
+library(magrittr)
+library(countrycode)
+library(ggplot2)
+library(scales)
+library(swiMap)
+library(swiTheme)
+library(forcats)
+
+### Getting data in packages
+library(eurostat)
+library(htmltools)
+library(shiny)
+library(swiRcharts)
+library(ggiraph)
+
+require(rgdal)
+require(rgeos)
+require(maptools)
+library(htmltools)
+library(ggiraph)
+library(swiRcharts)
+require(viridis)
+library(RColorBrewer)
+```
+
+
+
+```{r load data, include = F}
+### Get data from Eurostat
+if(downloadData) {
+  
+  # Get migration data 
+  dat <- get_eurostat(es.tb, time_format = "raw", cache = F, keepFlags = T)
+  
+  # wrange & discard 
+  data <- label_eurostat(dat %>% select(-flags), eu_order = T, code = c("geo"))
+  data$time <- as.numeric(data$time)
+  # # add back data flags ??
+  # data$flags <- dat$flags
+  # filter for the last year and only net migratio indicator
+  write.csv(data, eu.tgs00099.file, row.names = F)
+  data %<>% 
+    filter(indic_de == "Crude rate of net migration plus statistical adjustment", 
+           time == 2014) %>% select(-time)
+  write.csv(data, eu.migration.file, row.names = F)
+  
+  # Get geospatial data
+  geo <- get_eurostat_geospatial(output_class = "df", resolution = "20")
+  write.csv(geo, file = eu.geodata.file, row.names = F)
+} else {
+  data <- read.csv(eu.migration.file)
+  geo <- read.csv(eu.geodata.file)
+}
+
+```
+
+```{r helper mapping, echo = F}
+# helper mapping 
+bk_mapTheme <- function(
+  base_size = 14, base_family = "OpenSans-CondensedLight",
+  title_family = "OpenSans-CondensedBold", subtitle_family = "OpenSans-CondensedLight",
+  bg.colour = '#1a0000', colour = colourText_bkbg
+ ) {
+     swi_theme(
+       y_gridlines = F, base_size = base_size, base_family = base_family, 
+       title_family = title_family, subtitle = subtitle_family
+     ) + 
+    theme(
+      panel.background = element_rect(fill = bg.colour, size = 0),
+      plot.background = element_rect(fill = bg.colour, size = 0),
+      axis.line = element_blank(),
+      axis.ticks = element_blank(), 
+      axis.title = element_blank(), 
+      axis.text = element_blank(),
+      plot.title = element_text(colour = colour), 
+      plot.subtitle = element_text(colour = "white", margin=margin(b=13)),
+      plot.caption = element_text(colour = colour),
+      legend.text = element_text(colour = colourText_bkbg, size = 11, hjust = 1),
+      legend.title = element_text(colour = colourText_bkbg, size = 12.5),
+      legend.key.width = unit(10, "lines"),
+      legend.key.height = unit(2, "lines"),
+      legend.position = "top",
+      legend.title.align = 0,
+      strip.text = element_text(family = title_family, colour = "#ffe6e6", size = 14),
+      plot.margin = unit(c(0.25, 0, 0.1, 0), "cm")
+    ) 
+}
+```
+
+
+```{r map}
+ggplot(geo, aes(x=long,y=lat,group=group,fill=STAT_LEVL_),color="white") + geom_polygon() + 
+  coord_map() + xlim(c(-25, 38)) + ylim (c(33, 70)) + theme_minimal()
+
+data$bins <- cut(data$values, breaks = seq(-27, 27, 3))
+df <- filter(geo, STAT_LEVL_ == 2)
+df <- cbind(df, data[match(df$NUTS_ID, data$geo_code), c('geo', 'values', 'bins')])
+
+ct <- filter(geo, STAT_LEVL_ == 0)
+
+# ggplot(df, aes(x=long,y=lat,group=group,fill=bins), color="white") + geom_polygon() + 
+#    coord_quickmap(expand = F) + xlim(c(-18, 50)) + ylim (c(33, 70)) + bk_mapTheme() +
+#   scale_fill_viridis(option = "A", direction = 1, discrete = T)
+
+
+ggplot(df, aes(x=long,y=lat,group=group,fill = values), color="white") + geom_polygon() +
+   coord_map(projection = "gilbert", xlim = c(-12, 47),  ylim  = c(34, 72)) + bk_mapTheme() +
+  scale_fill_gradient2(low = "#666633", mid = "white", high = "#336666", midpoint = 0, breaks = seq(-27, 27, 3)) +
+  geom_polygon(data = ct, aes(x=long,y=lat,group=group), fill = NA, size = 0.1, colour = "#404040")
+
+
+```

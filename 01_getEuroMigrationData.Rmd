@@ -13,6 +13,7 @@ output:
 
  * [Population on 1 January by five year age group, sex and citizenship](http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en)
  * [Immigration by five year age group, sex and country of birth](http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_imm3ctb&lang=en) This dataset seems less complete
+ * OECD has similar data, less recent but more complete for some countries (France, ...) [OECD international migration DB](https://stats.oecd.org/Index.aspx?DataSetCode=MIG#)
 
 ## Related
 
@@ -28,16 +29,11 @@ output:
 ```{r setup, include=FALSE}
 downloadData <- F
 
-iso2.sub <- c('CH', 'DE', 'IT', 'UK', 'PT', 'ES', 'SE', 'RO')
-
 eu.pop.data.file <- "data/eurostat_pop_all.csv"
-
-euefta.outfile <- "intput/euefta_pop.csv"
-all.pop.outfile <- "intput/data_pop.csv"
+outfile <- "input/data_pop_2015.csv"
 
 # Eurostat data tables
 es.tb <- c('migr_pop1ctz')
-
 
 library(readr)
 library(tidyr)
@@ -68,6 +64,8 @@ require(forcats)
 ```{r load data, include = F}
 ### Get data from Eurostat
 if(downloadData) {
+  
+  #Get population data 
   dat <- get_eurostat(es.tb, time_format = "raw", cache = F, keepFlags = T)
   
   # wrange & discard 
@@ -82,6 +80,7 @@ if(downloadData) {
 } else {
   data <- read.csv(eu.pop.data.file)
 }
+
 ```
 
 ## remove useless aggregate citizenship
@@ -121,36 +120,5 @@ data <- do.call(rbind, by(data, data$geo_code, function(dd) {
   dd[dd$citizen_code != geoiso,]
 }))
 
-
-data %>% filter(geo_code == "CH") %>% as.data.frame()
- 
-data %>% filter(geo_code %in% iso2.sub) %>% group_by(citizen_code, citizen) %>%
-  summarise(tot = sum(values)) %>% ungroup() %>% arrange(desc(tot)) %>% head(20)
-
+write_csv(data, path = outfile)
 ```
-
-
-## Compute the sum for EU-28 + EFTA
-```{r wrangle, results='asis'}
-eu.ct <- c(eu_countries[,1], efta_countries[,1])
-
-## for all EU & EFTA countries check how complete is the citizen data
-eu.test <- data %>% filter(geo_code %in% eu.ct) %>% group_by(geo_code) %>%
-  summarise(forNat = length(values)) %>% ungroup() %>% as.data.frame()
-
-cat("### countries missing !!!!")
-cat(eu.ct[!eu.ct %in% eu.test$geo_code])
-
-eu <- data %>% filter(geo_code %in% eu.ct) %>% group_by(citizen) %>%
-  summarise(totNat = sum(values)) %>% ungroup() %>% arrange(desc(totNat)) %>%
-  mutate(TOT = sum(totNat))
-
-eu$citizen_code <- as.character(unlist(data[match(eu$citizen, data$citizen), 'citizen_code']))
-eu$share <- eu$totNat / eu$TOT
-eu$euefta <- eu$citizen_code %in% eu.ct
-eu$region <- countrycode(eu$citizen_code, "iso2c", "region")
-write_csv(eu, )
-
-```
-
-
