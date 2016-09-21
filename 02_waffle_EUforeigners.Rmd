@@ -8,11 +8,14 @@ output: html_document
 ## Resources
 
 * [Libre circulation](http://www.touteleurope.eu/les-politiques-europeennes/marche-interieur/synthese/la-libre-circulation-des-personnes.html)
-
+* [SEM libre circulation](https://www.sem.admin.ch/sem/fr/home/themen/fza_schweiz-eu-efta.html) AELE + EU
+* To check the graphic!! [Eurostat Non-national population by group of citizenship](http://ec.europa.eu/eurostat/statistics-explained/index.php/File:Non-national_population_by_group_of_citizenship,_1_January_2015_(¹)_YB16.png)
 
 ## Text snippets
 
 Nationalité des ressortissants. Pour les pays pour lequels procesus naturalisation facile, part d'étrangers. 
+
+* The number of people residing in an EU Member State with citizenship of a non-member country on 1 January 2015 was 19.8 million, representing 3.9 % of the EU-28 population. In addition, there were 15.3 million persons living in one of the EU Member States on 1 January 2015 with the citizenship of another EU Member State. [Eurostat Migration and migrant population statistics](The number of people residing in an EU Member State with citizenship of a non-member country on 1 January 2015 was 19.8 million, representing 3.9 % of the EU-28 population. In addition, there were 15.3 million persons living in one of the EU Member States on 1 January 2015 with the citizenship of another EU Member State.) 
 
 
 ```{r setup, include=FALSE}

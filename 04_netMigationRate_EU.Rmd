@@ -1,0 +1,48 @@
+---
+title: "04_netMigrationRate_EU"
+author: "Duc-Quang Nguyen"
+date: "9/21/2016"
+output: html_document
+---
+
+
+## Resources
+
+* [Net migration rate wikipedia](https://en.wikipedia.org/wiki/Net_migration_rate)
+
+## Data
+
+* [Net migration rate](https://www.cia.gov/library/PUBLICATIONS/the-world-factbook/rankorder/2112rank.html)
+  * Horrible format with fixed width columns (space)
+  * In libre office, choose "Fixed width" and choose manually the columns
+  * 
+
+```{r setup, include=FALSE}
+
+data.file <- "data/netMigtation_world_CIA_cleaned.csv"
+output.file <- "input/netMigration_EU.csv"
+
+library(readr)
+library(tidyr)
+library(dplyr)
+library(magrittr)
+library(countrycode)
+library(scales)
+library(swiMap)
+
+```
+
+
+```{r load data, include = F}
+data <- read.csv(data.file, header = F)[,-1]
+colnames(data) <- c('country', 'values')
+
+data$iso2c <- countrycode(data$country, "country.name", "iso2c")
+data$iso3c <-  countrycode(data$country, "country.name", "iso3c")
+
+data[which(is.na(data$iso2c)),]
+
+data <- cbind(data, countryTranslation(data$iso2c, c("EN", "DE", "FR", "IT", "ES", "PT","RU", "ZH", "JA","AR"))[,-1])
+
+write.csv(select(data, -country), file = output.file, row.names = F)
+```

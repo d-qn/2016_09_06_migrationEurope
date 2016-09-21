@@ -76,9 +76,12 @@ if(downloadData) {
 }
 
 ```
+## Wrangle data for waffle chart
 
-## remove useless aggregate citizenship
-```{r massive wrangle}
+### remove useless aggregate citizenship
+
+
+```{r wrangle to get the latest year and dicard most aggregates}
 agg.idx <- which(nchar(levels(data$citizen_code)) > 2)
 
 #data[match(levels(data$citizen_code)[agg.idx], data$citizen_code),c("citizen", "citizen_code")]
@@ -116,3 +119,4 @@ data <- do.call(rbind, by(data, data$geo_code, function(dd) {
 
 write_csv(data, path = outfile)
 ```
+
