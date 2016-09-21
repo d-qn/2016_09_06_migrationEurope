@@ -1,5 +1,5 @@
 ---
-title: "02_checkExploreEUPop"
+title: "02 chart EU migrant"
 author: "Duc-Quang Nguyen"
 date: "19 September 2016"
 output: html_document
@@ -17,9 +17,13 @@ Nationalité des ressortissants. Pour les pays pour lequels procesus naturalisat
 
 ```{r setup, include=FALSE}
 printTest <- F
-iso2.sub <- c('CH', 'DE', 'IT', 'GB', 'ES',  'PT','AT', 'RO')
+translation.file <- 'input/European migration - Sheet1.csv'
+
+iso2.sub <- c('CH', 'DE', 'IT', 'GB', 'ES', 'PT','AT', 'RO')
 
 infile <- "input/data_pop_2015.csv"
+
+
 
 library(readr)
 library(tidyr)
@@ -53,6 +57,18 @@ eu.ct <- c(eu_countries[,1], efta_countries[,1])
 eu.ct <- gsub("UK", "GB", eu.ct)
 eu.ct <- gsub("EL", "GR", eu.ct)
 
+# translation
+txt <- read.csv(translation.file, row.names = 1, stringsAsFactors = F)
+# discard incomplete translations
+cidx <- unique(which(txt =="" | is.na(txt), T)[,2])
+if(length(cidx > 0)) {
+  warning(paste(colnames(txt)[cidx], collapse = "\t"), " languages will be discarded!", "\n")
+  txt <- txt[,-cidx, drop = F]
+}
+colnames(txt)
+
+
+
 # Some test
 if(printTest) {
 data %>% filter(geo_code == "CH") %>% as.data.frame()
@@ -72,24 +88,53 @@ eu.test <- data %>% filter(geo_code %in% eu.ct) %>% group_by(geo_code) %>%
 cat("### countries missing !!!!")
 cat(eu.ct[!eu.ct %in% eu.test$geo_code])
 
-eu <- data %>% filter(geo_code %in% eu.ct) %>% group_by(citizen) %>%
+# create a special structure to plot as waffle with the sums of all EU & EFTA countries
+eu <- data %>% filter(geo_code %in% eu.ct) %>% group_by(citizen, citizen_code) %>%
+  summarise(values = sum(values)) %>% ungroup()
+
+eu.sums <- data %>% filter(geo_code %in% eu.ct) %>% group_by(geo) %>% 
+  summarise(
+    TOTAL = first(TOTAL),
+    NAT = first(NAT),
+    FOR = first(FOR),
+    EFTA_FOR = first(EFTA_FOR),
+    EU28_FOR = first(EU28_FOR)
+  ) %>% ungroup()
+
+eu.2<- t(as.data.frame(colSums(eu.sums[,-1])))
+rownames(eu.2) <- NULL
+eu <- cbind(eu, eu.2)
+
+eu$geo <- "EU_EFTA"
+eu$geo_code <- 'EU'
+
+eu$EUEFTA <- eu$EFTA_FOR + eu$EU28_FOR
+eu %<>% select(-EFTA_FOR, -EU28_FOR) %>% arrange(desc(values))
+
+
+
+eut <- data %>% filter(geo_code %in% eu.ct) %>% group_by(citizen) %>%
   summarise(totNat = sum(values)) %>% ungroup() %>% arrange(desc(totNat)) %>%
   mutate(TOT = sum(totNat))
 
-eu$citizen_code <- as.character(unlist(data[match(eu$citizen, data$citizen), 'citizen_code']))
-eu$share <- eu$totNat / eu$TOT
-eu$euefta <- eu$citizen_code %in% eu.ct
-eu$region <- countrycode(eu$citizen_code, "iso2c", "region")
-eu$continent <- countrycode(eu$citizen_code, "iso2c", "continent")
+eut$citizen_code <- as.character(unlist(data[match(eut$citizen, data$citizen), 'citizen_code']))
+eut$share <- eut$totNat / eut$TOT
+eut$euefta <- eut$citizen_code %in% eu.ct
+eut$continent <- countrycode(eut$citizen_code, "iso2c", "continent")
+
+# hack
+eut[which(eut$citizen_code %in% c("XK", "TW")), 'continent'] <- c("Europe", "Asia")
+if(any(is.na(eut$continent))) {stop()}
+
 
 if(printTest) {
-  head(eu, 20)
+  head(eut, 20)
 }
 
 library(treemap)
 library(highcharter)
 
-dff <- treemap(eu, draw = T, index = c("continent", "region", "citizen"), vSize = "totNat", type = "index")
+dff <- treemap(eut, draw = T, index = c("continent", "citizen"), vSize = "totNat", type = "index")
 ```
 
 
@@ -98,7 +143,7 @@ dff <- treemap(eu, draw = T, index = c("continent", "region", "citizen"), vSize 
 
 # compute the sum EFTA + EU-28 foreigners by country
 data$EUEFTA <- data$EFTA_FOR + data$EU28_FOR
-data %<>% select(-EFTA_FOR, -EU28_FOR) 
+data %<>% select(-EFTA_FOR, -EU28_FOR)
 
 #dd <- data %>% filter(geo_code == "IT") %>% arrange(desc(values))
 
@@ -107,14 +152,18 @@ mergeCit <- function(df, n = 6, base = 1000) {
   topN <- df %>% select(citizen_code) %>% head(n) %>% unlist(use.names = F)
   
   # get the total for EUEFTA and non-EU/EFTA countries
-  euefta <- df %>% filter(citizen_code %in% topN, citizen_code %in% eu.ct) %>% summarise(tot = sum(values)) %>% unlist()
-  non_euefta <- df %>% filter(citizen_code %in% topN, !citizen_code %in% eu.ct) %>% summarise(tot = sum(values)) %>% unlist()
-  non_euefta
+  euefta <- df %>% filter(citizen_code %in% topN, citizen_code %in% eu.ct) %>% 
+    summarise(tot = sum(values)) %>% unlist()
+  non_euefta <- df %>% filter(citizen_code %in% topN, !citizen_code %in% eu.ct) %>% 
+    summarise(tot = sum(values)) %>% unlist()
+
   ddd <- df %>% select(citizen_code, geo_code, values, TOTAL, FOR) %>% filter(citizen_code %in% topN)
   
   ddd <- rbind(ddd, 
-        data.frame(citizen_code = "other_EUEFTA", geo_code = ddd$geo_code[1],  TOTAL = ddd$TOTAL[1], FOR = ddd$FOR[1], values = df$EUEFTA[1] - euefta),
-        data.frame(citizen_code = "others", geo_code = ddd$geo_code[1],  TOTAL = ddd$TOTAL[1], FOR = ddd$FOR[1], values = df$FOR[1] - non_euefta- df$EUEFTA[1])
+        data.frame(citizen_code = "OU", geo_code = ddd$geo_code[1], 
+                   TOTAL = ddd$TOTAL[1], FOR = ddd$FOR[1], values = df$EUEFTA[1] - euefta),
+        data.frame(citizen_code = "OT", geo_code = ddd$geo_code[1],  
+                   TOTAL = ddd$TOTAL[1], FOR = ddd$FOR[1], values = df$FOR[1] - non_euefta- df$EUEFTA[1])
   )
   
   ddd$share <- round((ddd$values / ddd$TOTAL) * base)
@@ -124,6 +173,7 @@ mergeCit <- function(df, n = 6, base = 1000) {
 ### Subset data by iso2.sub and merge foreigner citizenships! 
 dd <- filter(data, geo_code %in% iso2.sub)
 df <- do.call(rbind, by(dd, dd$geo_code, mergeCit))
+df <- rbind(df, mergeCit(eu))
 
 # Get all foreign nationality
 cit <- df %>% group_by(citizen_code) %>% summarise(tot = sum(share)) %>%
@@ -139,10 +189,13 @@ totF <- df %>% group_by(geo_code) %>% summarise(tot = sum(share)) %>% ungroup() 
 
 wtheme <- function(title.font = "OpenSans-CondensedBold", base.font = "OpenSans-CondensedLight") {
   theme(
-    plot.title = element_text(family = title.font, size = 25),
+    plot.title = element_text(family = title.font, size = 22, margin = margin(b = 27.5), colour = "#404040"),
+    legend.title = element_text(family = base.font, size = 12, color = "#595959") ,
     legend.text = element_text(family = base.font, size = 16),
-    legend.key.width = unit(0.7, "lines"),
-    legend.key.height = unit(1, "lines")
+    legend.key.width = unit(1.6, "lines"),
+    legend.key.height = unit(1, "lines"),
+    legend.position=c(0,1.08), 
+    legend.justification=c(0, 0)
   ) 
 }
 
@@ -155,50 +208,74 @@ nrow <- 5
 size <- 1
 ncol <- floor(max(totF$tot) / nrow)
 
-lang <- 'EN'
+lang <- 'FR'
 
-# Loop by iso2 and create the 
-wf <- lapply(totF$geo_code, function(iso) {
-  iso <- gsub("UK", "GB", iso)
-  cat("\n", iso)
+for(lang in colnames(txt)) {
   
-  ddd <- filter(df, geo_code == iso, share > 0)
-  # order whether citizen is a EUFTA or not country
-  eu.log <- ddd$citizen_code %in% c(eu.ct, "other_EUEFTA") 
-  ddd <- ddd[c(which(eu.log), which(!eu.log)),]
-  
-  dddd <- structure(ddd$share, names = ifelse(is.na(countrycode(ddd$citizen_code, "iso2c", "country.name")), ddd$citizen_code, countrycode(ddd$citizen_code, "iso2c", "country.name")))
-  
-  pad <- ncol - floor(sum(ddd$share) / nrow)
-  
-  waffle(dddd, rows = nrow , size=size, pad = pad, colors = cit[match(ddd$citizen_code, cit$citizen_code), 'color'] %>% unlist(use.names = F), legend_pos = "top", 
-         title = countrycode(iso, "iso2c", "country.name"), xlab = "\n") + wtheme()
-
-})
-
-w.path <- paste0("output/waffle_chart_" , lang, ".png")
-w.html <- paste0("waffle_charts_" , lang, ".html")
-
-
-png(w.path,  res = 250, pointsize = 12, height = 4000, 
-    width = 2000)
-iron(wf[[1]], wf[[2]], wf[[3]], wf[[4]], wf[[5]], wf[[6]], wf[[7]],  wf[[8]])
-dev.off()
-
-
-save_html(
-  tags$html(
-   tags$head(includeHTML("styles.html")),
-    tags$body(    
-     # h2(txt["title2", lang]),
-      #div(class = "descr", HTML(txt["descr2", lang])),
-      div(img(src = basename(w.path), width= "100%")),
-      HTML(iframeresizer)  
-    )), file = w.html
-)
+  # Loop by iso2 and create the 
+  wf <- lapply(totF$geo_code, function(iso) {
+    cat("\n", iso)
     
-# move stuff
-file.rename(from = w.html, to = paste0("output/", w.html))    
+    ddd <- filter(df, geo_code == iso, share > 0)
+    pc <- round((ddd$FOR[1]/ ddd$TOTAL[1])  * 100, 1)
+    # order whether citizen is a EUFTA or not country
+    eu.log <- ddd$citizen_code %in% c(eu.ct, "OU") 
+    ddd <- ddd[c(which(eu.log), which(!eu.log)),]
+    
+    dddd <- structure(
+      ddd$share, names = countryTranslation(ddd$citizen_code, lang)[,-1])
+    
+    codes <- unlist(ddd[which(is.na(names(dddd))), "citizen_code"], use.names = F)
+    names(dddd)[which(is.na(names(dddd)))] <- txt[codes, lang]
+    if(any(is.na(names(dddd)))) {stop ()}
+    title <- paste0(ifelse(iso == "EU", txt['EU', lang], countryTranslation(iso, lang)[-1]), "\n")
+    pad <- ncol - floor(sum(ddd$share) / nrow)
+    
+    suppressWarnings(
+      waffle(
+        dddd, rows = nrow , size=size, pad = pad, 
+        colors = cit[match(ddd$citizen_code, cit$citizen_code), 'color'] %>% 
+          unlist(use.names = F), legend_pos = "top", 
+        title = title, xlab = "\n") +
+        wtheme(title.font = txt["title.font", lang], base.font = txt["base.font", lang]) + 
+        guides(fill=guide_legend(nrow=2,byrow=F, title = paste0(pc, txt["subtitle1", lang])))
+    )
+  })
+  
+  w.path <- paste0("output/waffle_chart_" , lang, ".png")
+  w.html <- paste0("waffle_charts_" , lang, ".html")
+  
+  png(w.path,  res = 250, pointsize = 12, height = 4700, 
+      width = 2000)
+  iron( wf[[7]], wf[[1]], wf[[2]], wf[[3]], wf[[4]], wf[[5]], wf[[6]],  wf[[8]], wf[[9]])
+  dev.off()
+  
+  source <- paste0(
+    txt['source', lang], ": ", htmlLink(txt['source.url', lang], txt['source.name', lang]), " | ",
+    txt['code', lang], ": ", htmlLink(txt['code.url', lang], txt['code.name', lang]), " | ",
+    htmlLink("http://www.swissinfo.ch", 'swissinfo.ch')               
+  )
+  footer <- paste0(txt["footer1", lang], "<br>", txt["footer2", lang])
+  
+  save_html(
+    tags$html(
+      tags$head(includeHTML("styles.html")),
+      tags$body(    
+        h2(txt["title1", lang]),
+        div(class = "descr", HTML(txt["descr1", lang])),
+        h3(txt["h3", lang]),
+        div(img(src = basename(w.path), width= "100%")),
+        div(class = "footer", HTML(footer)),
+        div(id = "cite", HTML(source)),
+        HTML(iframeresizer)  
+      )), file = w.html
+  )
+  
+  # move stuff
+  file.rename(from = w.html, to = paste0("output/", w.html))    
+}
+
+
     
 ```
 

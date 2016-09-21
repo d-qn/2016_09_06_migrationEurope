@@ -48,12 +48,6 @@ library(forcats)
 
 ### Getting data in packages
 library(eurostat)
-# ### Interactive 
-# library(htmltools)
-# library(shiny)
-# library(swiRcharts)
-# library(rCharts)
-
 ### Misc stuff
 require(forcats)
 ```

@@ -1,0 +1,18 @@
+code,EN,FR,DE,IT,PT,AR,RU,ES,JA,ZH
+title1,,"Si ces pays avaient 1000 habitants, leur population étrangère se composerait de....",,,,,,,,
+descr1,,Nationalité des ressortissants ne possédant pas la citoyenneté du pays dans lequel ils résident en 2015.,,,,,,,,
+h3,,1 carré = 1 personne.  Par mille habitants,,,,,,,,
+subtitle1,,% d'étranger,,,,,,,,
+footer1,,"* AELE: Association européenne de libre-échange qui comprend la Suisse, le Liechtenstein, la Norvège et l'Islande. ",,,,,,,,
+footer2,,"UE-28: Union européenne des vingt-huit à l'exception de la France, la Grèce, la Hongrie, Chypre, le Luxembourg, Malte et la Pologne pour lequels les données sont manquantes. ",,,,,,,,
+EU,,UE-28 + AELE*,,,,,,,,
+OU,,Autres pays de l'UE-28 et AELE,,,,,,,,
+OTH,,Autres pays,,,,,,,,
+source,Source,source,Quelle,Fonte,fonte,المصدر,Источник,Fuente,出典,来源
+source.name,,Eurostat,,,,,,,,
+source.url,http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en,http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en,http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en,http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en,http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en,http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en,http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en,http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en,http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en,http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en
+code,Code,code,Code,Codice,código,الرمز,Код,código,コード,代码
+code.name,waffle,waffle,waffle,waffle,waffle,waffle,waffle,waffle,waffle,
+code.url,https://github.com/hrbrmstr/waffle,https://github.com/hrbrmstr/waffle,https://github.com/hrbrmstr/waffle,https://github.com/hrbrmstr/waffle,https://github.com/hrbrmstr/waffle,https://github.com/hrbrmstr/waffle,https://github.com/hrbrmstr/waffle,https://github.com/hrbrmstr/waffle,https://github.com/hrbrmstr/waffle,https://github.com/hrbrmstr/waffle
+title.font,OpenSans-CondensedBold,OpenSans-CondensedBold,OpenSans-CondensedBold,OpenSans-CondensedBold,OpenSans-CondensedBold,OpenSans-CondensedBold,OpenSans-CondensedBold,OpenSans-CondensedBold,Hiragino Sans W1,PingFang SC Light
+base.font,OpenSans-CondensedLight,OpenSans-CondensedLight,OpenSans-CondensedLight,OpenSans-CondensedLight,OpenSans-CondensedLight,OpenSans-CondensedLight,OpenSans-CondensedLight,OpenSans-CondensedLight,PingFang SC Semibold,PingFang SC Semibold
