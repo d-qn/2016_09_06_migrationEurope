@@ -16,9 +16,10 @@ output: html_document
 ```{r setup, include=FALSE}
 downloadData <- F
 
+
 eu.tgs00099.file <- "data/all_tgs00099.csv"
 eu.migration.file <- "data/migration.2014.csv"
-eu.geodata.file <- "input/eurostat_NUTS_geodata"
+eu.geodata.file <- "input/eurostat_NUTS_geodata.Rdata"
 
 colourText_bkbg <- '#262626'
 border.color <- "#737373"
@@ -73,10 +74,10 @@ if(downloadData) {
   
   # Get geospatial data
   geo <- get_eurostat_geospatial(output_class = "df", resolution = "20")
-  write.csv(geo, file = eu.geodata.file, row.names = F)
+  save(geo, file = eu.geodata.file)
 } else {
   data <- read.csv(eu.migration.file)
-  geo <- read.csv(eu.geodata.file)
+  load(eu.geodata.file)
 }
 
 ```
@@ -85,19 +86,24 @@ if(downloadData) {
 
 ```{r helper mapping, echo = F}
 # helper mapping 
-bk_mapTheme <- function(
+mapTheme <- function(
   base_size = 14, base_family = "OpenSans-CondensedLight",
   title_family = "OpenSans-CondensedBold", subtitle_family = "OpenSans-CondensedLight",
   colour = colourText_bkbg
- ) {
+ ) { 
+   theme_bw() + 
     theme(
       axis.line = element_blank(),
       axis.ticks = element_blank(), 
       axis.title = element_blank(), 
       axis.text = element_blank(),
+      panel.grid = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.border = element_blank(),
+      plot.background = element_rect(fill = NULL),
       legend.text = element_text(colour = colourText_bkbg, size = 11, hjust = 1),
       legend.title = element_text(colour = colourText_bkbg, size = 12.5),
-      legend.key.width = unit(10, "lines"),
+      legend.key.width = unit(2, "lines"),
       legend.key.height = unit(2, "lines"),
       legend.position = "top",
       plot.margin = unit(c(0, 0, 0, 0), "cm")
@@ -108,8 +114,9 @@ bk_mapTheme <- function(
 
 ```{r map}
 
-data$bins <- cut(data$values, breaks = c(-Inf, -10, -5, -2.5, 0, 2.5, 5, 10, Inf))
-colors <- c('#ab3d3f','#c36a66','#d79591','#e9c0be','#eef6f6','#bed1d0','#8fabab','#618888','#336666')
+lang <- 'EN'
+
+data$bins <- cut(data$values, breaks = c(-Inf, -10, -7.5, -5, -2.5, 0, 2.5, 5, 7.5, 10, Inf))
 
 df <- filter(geo, STAT_LEVL_ == 2)
 df <- cbind(df, data[match(df$NUTS_ID, data$geo_code), c('geo', 'values', 'bins')])
@@ -117,30 +124,31 @@ ct <- filter(geo, STAT_LEVL_ == 0)
 
 # get the country name 
 df$iso2 <- strtrim(df$NUTS_ID, 2)
+
+
 df$country <- countrycode(df$iso2, "iso2c", "country.name")
 
 # Construct tooltip
 
- df$tip <- paste0(
-    '<h4>', as.character(df$country), '</h4><div class="tpsubtitle">',
-    as.character(df$geo), '</div><div class = "tp">',
-    "Net migration rate", ' <b>', df$values, '</b></div>')
- df$tip <- gsub("'", "_", gsub("\\\n", "", df$tip))
+df$tip <- paste0(
+  '<h4>', as.character(df$country), '</h4><div class="tpsubtitle">',
+  as.character(df$geo), '</div><div class = "tp">',
+  "Net migration rate", ' <b>', df$values, '</b></div>')
+df$tip <- gsub("'", "_", gsub("\\\n", "", df$tip))
   
+df$tip <- "asdfD"
 
 
-
-map <- ggplot() + 
+map <- ggplot(data = df) + 
   geom_polygon_interactive(
-    data = df, aes(x=long,y=lat,group=group,fill=bins, data_id = NUTS_ID, tooltip = tip)
+    aes( x = long, y = lat, group = group, fill = bins, data_id = as.numeric(id), tooltip = tip)
   ) +
-  coord_quickmap(expand = F) + xlim(c(-18, 50)) + ylim (c(33, 73)) + 
-  bk_mapTheme() +
-  scale_fill_manual(values = colors) + 
-  geom_polygon(data = ct, aes(x=long,y=lat,group=group, id = group), 
-               fill =NA, colour = "#8c8c8c", size = 0.1)
+  coord_map("conic", lat0 = 30 , xlim = c(-9.5, 44),  ylim  = c(34.5, 72)) + 
+  mapTheme() +
+  scale_fill_manual(values = swi_dpal3) # + 
+  # geom_polygon(data = ct, aes(x=long,y=lat,group=group, id = group), 
+  #              fill =NA, colour = "#8c8c8c", size = 0.1)
 
-  
 tooltip_css <- "background-color:#333333;padding:0px;margin:0px;border-radius:5px;"
   
 imap <- ggiraph(
@@ -151,6 +159,23 @@ imap <- ggiraph(
   fontname_sans = 'Open Sans Condensed'
 )
   
+html.outfile <- paste0("regionalEUmap_netMigration_", lang, ".html")
+    
 
+save_html(
+  tags$html(
+    tags$head(includeHTML("styles_interactive.html")),
+    tags$body(    
+     # h2(txt["title1", lang]),
+     # div(class = "descr", HTML(paste0(txt["descr1", lang],  '&nbsp; &nbsp; <img src="Interactive_icon.svg.png" width="23" align="top">'))),
+      div(class="container", imap),
+      HTML(iframeresizer)  
+    )), file = html.outfile, libdir = "js", background = '#1a0000'
+)
 
+# move stuff
+fileToMove <- c(html.outfile, "js")
+file.rename(from = fileToMove, to = paste0("output/", fileToMove))
+    
+    
 ```
