@@ -4,6 +4,7 @@
 <meta charset="utf-8"/>
 
   <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700,300italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 
@@ -57,8 +58,8 @@ h2 {
 }
 
 h3 {
-   max-width:83%;
-   font-size:1.7em;
+   max-width:94%;
+   font-size:1.6em;
    color: white;
    margin-left:0.7%;
    margin-right:0.7%;
@@ -93,8 +94,18 @@ body {
 
 a, a:visited {
       text-decoration: underline;
-   }
 }
+
+body {
+    background-color:lightgreen;
+}
+
+@media only screen and (max-width: 600px) {
+    body {
+           font-size: 11px;
+    }
+}
+
 
 </style>
 </head>
@@ -102,7 +113,7 @@ a, a:visited {
 <html>
   <body>
     <h2>Si ces pays avaient 1000 habitants, leur population étrangère se composerait de....</h2>
-    <div class="descr">Nationalité des ressortissants ne possédant pas la citoyenneté du pays dans lequel ils résident en 2015.</div>
+    <div class="descr">Nationalité des ressortissants ne possédant pas la citoyenneté du pays dans lequel ils résident en 2015. Les nationalités de l'UE et l'AELE sont disposées sur la gauche du graphique, suivent ensuite les citoyens des autres pays.  </div>
     <h3>1 carré = 1 personne.  Par mille habitants</h3>
     <div>
       <img src="waffle_chart_FR.png" width="100%"/>
