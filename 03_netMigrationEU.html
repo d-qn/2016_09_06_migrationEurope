@@ -131,79 +131,142 @@ $(document).ready(function () {
 <li><a href="http://ec.europa.eu/eurostat/web/products-datasets/-/tgs00099">Crude rates of population change by NUTS 2 region</a> # <a href="http://ec.europa.eu/eurostat/web/products-manuals-and-guidelines/-/KS-GQ-14-006">NUTS geo</a></li>
 </ul>
 </div>
+<div id="section" class="section level2">
+<h2></h2>
+</div>
 <div id="map" class="section level2">
 <h2>Map</h2>
-<pre class="r"><code>data$bins &lt;- cut(data$values, breaks = c(-Inf, -10, -7.5, -5, -2.5, 0, 2.5, 5, 7.5, 10, Inf))
+<pre class="r"><code>data$bins &lt;- cut(data$values, 
+                 breaks = c(-Inf, -10, -7.5, -5, -2.5, 0, 2.5, 5, 7.5, 10, Inf), 
+                 labels = c(&quot;&lt; -10&quot;, &quot; -10 - -7.5&quot;, &quot; -7.5 - 5&quot;, &quot; -5 - 2.5&quot;, &quot; -2.5 - 0&quot;, 
+                            &quot;  0 - 2.5&quot;, &quot;  2.5 - 5&quot;, &quot;  5 - 7.5&quot;, &quot;  7.5 - 10&quot;, &quot;  &gt; 10&quot;))
 
-lang &lt;- 'EN'
-
-
-df &lt;- filter(geo, STAT_LEVL_ == 2)
-df &lt;- cbind(df, data[match(as.character(df$NUTS_ID), as.character(data$geo_code)), c('geo', 'values', 'bins')])
-ct &lt;- filter(geo, STAT_LEVL_ == 0)
-
-# get the country name 
-df$iso2 &lt;- strtrim(df$NUTS_ID, 2)
-
-
-df$country &lt;- countrycode(df$iso2, &quot;iso2c&quot;, &quot;country.name&quot;)
-
-# Construct tooltip
-
-df$tip &lt;- paste0(
-  '&lt;h4&gt;', as.character(df$country), '&lt;/h4&gt;&lt;div class=&quot;tpsubtitle&quot;&gt;',
-  as.character(df$geo), '&lt;/div&gt;&lt;div class = &quot;tp&quot;&gt;',
-  &quot;Net migration rate&quot;, ' &lt;b&gt;', df$values, '&lt;/b&gt;&lt;/div&gt;')
-df$tip &lt;- gsub(&quot;'&quot;, &quot;_&quot;, gsub(&quot;\\\n&quot;, &quot;&quot;, df$tip))
   
+lang &lt;- 'FR'
 
-map &lt;- ggplot() + 
-  geom_polygon_interactive(
-    data = df,
-    aes( x = long, y = lat, group = group, fill = bins, data_id = as.numeric(id), tooltip = tip)
-  ) +
-  # coord_map(&quot;conic&quot;, lat0 = 30 , xlim = c(-9.5, 44), ylim = c(34.5, 72)) #+ 
-  coord_quickmap(expand = F)  +  xlim(c(-11, 45)) + ylim(c(35, 71.5)) +
-  mapTheme() +
-  labs(x=NULL, y=NULL) + 
-  scale_fill_manual(values = swi_dpal3) +
-  geom_polygon(data = ct, aes(x=long,y=lat,group=group, id = group),
-               fill =NA, colour = &quot;#3B3B3B&quot;, size = 0.15)</code></pre>
+for(lang in colnames(txt)) {
+  cat(&quot;\n&quot;, lang)
+  
+  df &lt;- filter(geo, STAT_LEVL_ == 2)
+  df &lt;- cbind(df, data[match(as.character(df$NUTS_ID), as.character(data$geo_code)), c('geo', 'values', 'bins')])
+  ct &lt;- filter(geo, STAT_LEVL_ == 0)
+  
+  # get the country name 
+  df$iso2 &lt;- strtrim(df$NUTS_ID, 2)
+  
+  # hack for UK and GR iso code 
+  df$iso2&lt;- gsub(&quot;UK&quot;, &quot;GB&quot;, df$iso2)
+  df$iso2&lt;- gsub(&quot;EL&quot;, &quot;GR&quot;, df$iso2)
+  
+  df$country &lt;- countryTranslation(df$iso2, lang)[,-1]
+  
+  # Construct tooltip
+  df$tip &lt;- paste0(
+    '&lt;h4&gt;', as.character(df$country), '&lt;/h4&gt;&lt;div class=&quot;tpsubtitle&quot;&gt;',
+    as.character(df$geo), '&lt;/div&gt;&lt;div class = &quot;tp&quot;&gt;',
+    txt['leg.title', lang], ' &lt;b&gt;', df$values, '&lt;/b&gt;&lt;/div&gt;')
+  df$tip &lt;- gsub(&quot;'&quot;, &quot;_&quot;, gsub(&quot;\\\n&quot;, &quot;&quot;, df$tip))
+  
+  map &lt;- ggplot() + 
+    geom_polygon_interactive(
+      data = df,
+      aes( x = long, y = lat, group = group, fill = bins, data_id = as.numeric(id), tooltip = tip)
+    ) +
+    coord_cartesian() + 
+    scale_x_continuous(limits = c(-10.5, 45.5), name = &quot;&quot;, expand = c(0,0)) +
+    scale_y_continuous(limits = c(33, 71.5), name = &quot;&quot;, expand = c(0,0)) +
+    #coord_quickmap(expand = F)  +  xlim(c(-11, 45)) + ylim(c(34, 71.5)) +
+    mapTheme() + 
+    scale_fill_manual(values = swi_dpal3, name = paste0(txt['leg.title', lang], &quot;  &quot;)) +
+    geom_polygon(data = ct, aes(x=long,y=lat,group=group, id = group),
+                 fill =NA, colour = &quot;#737373&quot;, size = 0.1)
+  
+  tooltip_css &lt;- &quot;background-color:#f2f2f2;padding:0px;margin:0px;border-radius:5px;&quot;
+  hover_css &lt;- &quot;fill:#996666;&quot;
+  imap &lt;- ggiraph(
+    code = {print(map)}, 
+    width = 1, 
+    pointsize = 9,
+    zoom_max = 2, 
+    tooltip_extra_css = tooltip_css,
+    hover_css = hover_css,
+    fontname_sans = 'Open Sans Condensed'
+  )
+  
+  html.outfile &lt;- paste0(&quot;regionalEUmap_netMigration_&quot;, lang, &quot;.html&quot;)
+  
+  
+  source &lt;- paste0(
+    txt['source', lang], &quot;: &quot;, htmlLink(txt['source.url', lang], txt['source.name', lang]), &quot; &amp; &quot;,
+    htmlLink(txt['source2.url', lang], txt['source2.name', lang]), &quot; | &quot;,
+    txt['code', lang], &quot;: &quot;, htmlLink(txt['code.url', lang], txt['code.name', lang]), &quot; | &quot;,
+    htmlLink(&quot;http://www.swissinfo.ch&quot;, 'swissinfo.ch'), &quot; | &quot;,
+    htmlLink(&quot;https://twitter.com/duc_qn&quot;, '@duc_qn')    
+  )
+  #footer &lt;- paste0(txt[&quot;footer1&quot;, lang], &quot;&lt;br&gt;&quot;, txt[&quot;footer2&quot;, lang])
+  
+  
+  save_html(
+    tags$html(
+      tags$head(includeHTML(&quot;stylesMap.html&quot;)),
+      tags$body(    
+        h2(txt[&quot;title1&quot;, lang]),
+        div(class = &quot;descr&quot;, HTML(paste0(txt[&quot;descr1&quot;, lang], '&amp;nbsp; &amp;nbsp; &lt;img src=&quot;Interactive_icon.svg.png&quot; width=&quot;18&quot; align=&quot;top&quot;&gt;'))),
+        div(class=&quot;container&quot;, imap),
+        div(id = &quot;cite&quot;, HTML(source)),
+        HTML(iframeresizer)  
+      )), file = html.outfile, libdir = &quot;js&quot;
+  )
+  
+  # move stuff
+  fileToMove &lt;- c(html.outfile, &quot;js&quot;)
+  file.rename(from = fileToMove, to = paste0(&quot;output/&quot;, fileToMove))
+      
+}</code></pre>
+<pre><code>## 
+##  FR</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: data_id, tooltip</code></pre>
 <pre><code>## Warning: `panel.margin` is deprecated. Please use `panel.spacing` property
 ## instead</code></pre>
-<pre class="r"><code>tooltip_css &lt;- &quot;background-color:#f2f2f2;padding:0px;margin:0px;border-radius:5px;&quot;
-  
-imap &lt;- ggiraph(
-  code = {print(map)}, 
-  width = 1, 
-  pointsize = 9,
-  zoom_max = 2, 
-  tooltip_extra_css = tooltip_css,
-  fontname_sans = 'Open Sans Condensed'
-)</code></pre>
-<pre><code>## Warning: Removed 477 rows containing missing values
+<pre><code>## Warning: Ignoring unknown aesthetics: id</code></pre>
+<pre><code>## Warning: Removed 465 rows containing missing values
 ## (geom_interactive_polygon).</code></pre>
-<pre class="r"><code>html.outfile &lt;- paste0(&quot;regionalEUmap_netMigration_&quot;, lang, &quot;.html&quot;)
-    
-
-save_html(
-  tags$html(
-    tags$head(includeHTML(&quot;stylesMap.html&quot;)),
-    tags$body(    
-     # h2(txt[&quot;title1&quot;, lang]),
-     # div(class = &quot;descr&quot;, HTML(paste0(txt[&quot;descr1&quot;, lang],  '&amp;nbsp; &amp;nbsp; &lt;img src=&quot;Interactive_icon.svg.png&quot; width=&quot;23&quot; align=&quot;top&quot;&gt;'))),
-      div(class=&quot;container&quot;, imap),
-      HTML(iframeresizer)  
-    )), file = html.outfile, libdir = &quot;js&quot;
-)
-
-# move stuff
-fileToMove &lt;- c(html.outfile, &quot;js&quot;)
-file.rename(from = fileToMove, to = paste0(&quot;output/&quot;, fileToMove))</code></pre>
 <pre><code>## Warning in file.rename(from = fileToMove, to = paste0(&quot;output/&quot;,
 ## fileToMove)): cannot rename file 'js' to 'output/js', reason 'Directory not
 ## empty'</code></pre>
-<pre><code>## [1]  TRUE FALSE</code></pre>
+<pre><code>## 
+##  DE</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: data_id, tooltip</code></pre>
+<pre><code>## Warning: `panel.margin` is deprecated. Please use `panel.spacing` property
+## instead</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: id</code></pre>
+<pre><code>## Warning: Removed 465 rows containing missing values
+## (geom_interactive_polygon).</code></pre>
+<pre><code>## Warning in file.rename(from = fileToMove, to = paste0(&quot;output/&quot;,
+## fileToMove)): cannot rename file 'js' to 'output/js', reason 'Directory not
+## empty'</code></pre>
+<pre><code>## 
+##  IT</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: data_id, tooltip</code></pre>
+<pre><code>## Warning: `panel.margin` is deprecated. Please use `panel.spacing` property
+## instead</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: id</code></pre>
+<pre><code>## Warning: Removed 465 rows containing missing values
+## (geom_interactive_polygon).</code></pre>
+<pre><code>## Warning in file.rename(from = fileToMove, to = paste0(&quot;output/&quot;,
+## fileToMove)): cannot rename file 'js' to 'output/js', reason 'Directory not
+## empty'</code></pre>
+<pre><code>## 
+##  ZH</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: data_id, tooltip</code></pre>
+<pre><code>## Warning: `panel.margin` is deprecated. Please use `panel.spacing` property
+## instead</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: id</code></pre>
+<pre><code>## Warning: Removed 465 rows containing missing values
+## (geom_interactive_polygon).</code></pre>
+<pre><code>## Warning in file.rename(from = fileToMove, to = paste0(&quot;output/&quot;,
+## fileToMove)): cannot rename file 'js' to 'output/js', reason 'Directory not
+## empty'</code></pre>
 </div>
 
 

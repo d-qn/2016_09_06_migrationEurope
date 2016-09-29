@@ -15,12 +15,6 @@ output:
  * [Immigration by five year age group, sex and country of birth](http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_imm3ctb&lang=en) This dataset seems less complete
  * OECD has similar data, less recent but more complete for some countries (France, ...) [OECD international migration DB](https://stats.oecd.org/Index.aspx?DataSetCode=MIG#)
 
-## Related
-
-* [Metrocosm Which EU Country Has the Most Citizens Living Abroad?](http://metrocosm.com/eu-diaspora-map/)
-* [Metrocosm The Ins and Outs of Immigration in the European Union](http://metrocosm.com/mapping-eu-immigration/)
-* [Intra-european living elsewhere](http://www.economist.com/news/europe/21704813-eus-cherished-free-movement-rights-are-less-secure-they-seem-europes-scapegoat)
-
 ![chart](inspirations/20160813_EUC318.png)
 
 ![eurostatTable](inspirations/Main_countries_of_citizenship_and_birth_of_the_foreign_foreign-born_population,_1_January_2015_(¹)_(in_absolute_numbers_and_as_a_percentage_of_the_total_foreign_foreign-born_population)_YB16.png)
@@ -76,10 +70,43 @@ if(downloadData) {
 }
 
 ```
+
+## Some key numbers
+
+```{r some stats, results="asis", echo = F}
+eu.ct <- c(eu_countries[,1], efta_countries[,1])
+dd <- data %>% filter(geo_code %in% eu.ct) %>% filter(time == 2015)
+
+
+cat("\n### EU28")
+eu.toteu <- dd %>% filter(geo_code %in% eu_countries[,1], citizen_code == 'EU28_FOR') %>%
+  select(values) %>% unlist(use.names = F) %>% sum()
+cat("\n* ", "Total number of EU28 foreigners in EU28 countries:", eu.toteu)
+eu.tot <- dd %>% filter(geo_code %in% eu_countries[,1], citizen_code == 'FOR') %>%
+  select(values) %>% unlist(use.names = F) %>% sum()
+cat("\n* ", "Total number of foreigners in EU28 countries:", eu.tot)
+cat("\n* ", "Total number of non-EU28 foreigners in EU28 countries:", eu.tot - eu.toteu)
+cat("\n* ", "Share of EU28 foreigners in EU countries:", (eu.toteu /eu.tot) * 100)
+
+cat("\n\n### EU28 + EFTA foreigners")
+euefta.tot <- dd %>% filter(citizen_code %in% c('EU28_FOR', 'EFTA_FOR')) %>%
+  select(values) %>% unlist(use.names = F) %>% sum()
+cat("\n* ", "Total number of EU28 + EFTA foreigners in EU28 + EFTA countries:", euefta.tot)
+for.tot <- dd %>% filter(citizen_code == "FOR") %>%
+  select(values) %>% unlist(use.names = F) %>% sum()
+cat("\n* ", "Number of non-EU28/EFTA foreigners in EU28 + EFTA countries:", for.tot - euefta.tot)
+cat("\n* ", "Total number foreigners in EU28 + EFTA countries:", for.tot)
+cat("\n* ", "Share of EU28 + EFTA foreigners in EU28 + EFTA countries:", (euefta.tot /for.tot) * 100)
+
+cat("\n\n###Total Population in EU28 + EFTA")
+euefta.totpop <- dd %>% filter(citizen_code == "TOTAL") %>% select(values) %>% sum()
+cat("\n*", euefta.totpop)
+cat("\n* Proportion foreigners", (for.tot / euefta.totpop) * 100)
+cat("\n* Proportion of EFTA/EU28-foreigners", (euefta.tot / euefta.totpop) * 100, "\n\n")
+```
 ## Wrangle data for waffle chart
 
 ### remove useless aggregate citizenship
-
 
 ```{r wrangle to get the latest year and dicard most aggregates}
 agg.idx <- which(nchar(levels(data$citizen_code)) > 2)
@@ -120,3 +147,13 @@ data <- do.call(rbind, by(data, data$geo_code, function(dd) {
 write_csv(data, path = outfile)
 ```
 
+```{r some more key stats}
+ori <- data %>% group_by(citizen_code, citizen) %>%
+  filter(geo_code %in%  c(eu_countries[,1], efta_countries[,1])) %>% 
+  summarise(tot = sum(values)) %>% ungroup() %>% arrange(desc(tot))
+
+ori$share_eueftaFor <- (ori$tot / euefta.tot) * 100
+ori$share_totFor <- (ori$tot / for.tot) * 100
+knitr::kable(head(ori, 10), digits = 2)
+
+```

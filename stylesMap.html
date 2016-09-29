@@ -1,5 +1,5 @@
 <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700,300italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 
 body, h1, h2, h3, h4, h5, h6, .descr, td, table {
@@ -7,7 +7,7 @@ body, h1, h2, h3, h4, h5, h6, .descr, td, table {
    font-smoothing: antialiased;
    font-family: 'Open Sans Condensed', sans-serif;
    font-size: 17px;
-   margin:3px 4px 0px 1px;
+   margin:0px 12px 0px 0px;
 }
 
 .container {
@@ -22,7 +22,14 @@ svg {
 }
 
 #cite {
-    font-size: 0.6em; color: #B8B8B8; text-align: right; margin-top:1px; margin-right:15px; padding-bottom: 3px;
+  position: fixed;
+  bottom:0;
+    font-size: 0.6em;
+    color: #B8B8B8;
+    text-align:right;
+    margin-top:1px;
+    margin-right:5px;
+    padding-bottom: 1px;
 }
 #cite a { text-decoration: none; color: #821122; }
 
@@ -36,20 +43,20 @@ svg {
 }
 
 .tp{
-  font-size: 0.9em;
+  font-size: 0.7em;
   padding: 0px 2px 3px 5px;
 }
 
 .tpsubtitle {
   font-style: italic;
-  font-size: 0.7em;
+  font-size: 0.85em;
   margin-bottom: 2px;
   padding: 0px 2px 3px 5px;
 }
 
 
 .descr {
- font-size: 0.95em;
+ font-size: 1em;
  font-weight: lighter;
  color: #333333;
  max-width:99%;
@@ -61,7 +68,7 @@ h1 {
 }
 
 h2 {
-   font-size:1.43em;
+   font-size:1.8em;
    line-height: 105%;
    font-weight: 700;
    max-width:95%;
@@ -77,6 +84,7 @@ h3 {
 
 h4 {
   font-size: 0.9em;
+  margin-left: 2px;
   background: #cccccc;
   padding:1px;
 }
@@ -96,12 +104,18 @@ a:visited {
 
 
 body {
-      max-width:100%;
-   }
-
-   a, a:visited {
-      text-decoration: underline;
-   }
+  max-width:100%;
 }
+
+a, a:visited {
+  text-decoration: underline;
+}
+
+@media only screen and (max-width: 600px) {
+    body {
+           font-size: 12px;
+    }
+}
+
 
 </style>

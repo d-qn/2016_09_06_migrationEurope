@@ -1,18 +1,18 @@
 code,EN,FR,DE,IT,PT,AR,RU,ES,JA,ZH
-title1,,"Si ces pays avaient 1000 habitants, leur population étrangère se composerait de....",,,,,,,,
-descr1,,"Nationalité des ressortissants ne possédant pas la citoyenneté du pays dans lequel ils résident en 2015. Les nationalités de l'UE et l'AELE sont disposées sur la gauche du graphique, suivent ensuite les citoyens des autres pays.  ",,,,,,,,
-h3,,1 carré = 1 personne.  Par mille habitants,,,,,,,,
-subtitle1,,% d'étranger,,,,,,,,
-footer1,,"* AELE: Association européenne de libre-échange qui comprend la Suisse, le Liechtenstein, la Norvège et l'Islande. ",,,,,,,,
-footer2,,"UE-28: Union européenne des vingt-huit à l'exception de la France, la Grèce, la Hongrie, Chypre, le Luxembourg, Malte et la Pologne pour lequels les données sont manquantes. ",,,,,,,,
-EU,,UE-28 + AELE*,,,,,,,,
-OU,,Autres pays de l'UE-28 et AELE,,,,,,,,
-OTH,,Autres pays,,,,,,,,
+title1,,"Si ces pays avaient 1000 habitants, leur population étrangère se composerait de....","Hätten diese Länder 1000 Einwohner, würde sich ihre ausländische Bevölkerung folgendermassen zusammensetzen:","Se questi paesi avessero 1000 abitanti, la loro popolazione straniera sarebbe composta di...",,,,,,假设各国人口为1000人，其中不同国籍的外籍人口数量则是：
+descr1,,"Nationalité des ressortissants ne possédant pas la citoyenneté du pays dans lequel ils résident en 2015. Les nationalités de l'UE et de l'AELE sont disposées sur la gauche du graphique, suivent ensuite les citoyens des autres pays.  ","Nationalität der Personen ohne Staatsbürgerschaft des Landes, in dem sie 2015 lebten. EU- und EFTA-Bürger finden sich auf der linken Seite der Grafik, gefolgt von den Bürgern anderer Länder.",Nazionalità delle persone che non possiedono la cittadinanza del paese in cui risiedono nel 2015. Le nazionalità dell'UE e dell'AELS figurano sulla sinistra del grafico e in seguito quelle dei cittadini degli altri paesi.,,,,,,2015年，在该国居住、但不持有该国护照的居民国籍。欧盟及欧洲自由贸易联盟成员国国籍居图表左列，其他国籍居图表右列。
+h3,,1 carré = 1 personne. Par mille habitants,1 Quadrat = 1 Person. Pro 1000 Einwohner,1 quadrato = 1 persona. Per mille abitanti.,,,,,,一个方块代表一个人(在千人中的人数)
+subtitle1,,% d'étrangers,% Ausländer,% di stranieri,,,,,,外籍人口百分比
+footer1,,"* AELE: Association européenne de libre-échange qui comprend la Suisse, le Liechtenstein, la Norvège et l'Islande. ","* EFTA: Europäische Freihandelsassoziation. Mitgliedstaaten sind die Schweiz, Liechtenstein, Norwegen und Island.","* AELS: Associazione europea di libero scambio, che comprende la Svizzera, il Liechtenstein, la Norvegia e l'Islanda.",,,,,,*AELE：欧洲自由贸易联盟成员国：瑞士、列支敦士登、挪威和冰岛。
+footer2,,"UE-28: Union européenne des vingt-huit à l'exception de la France, la Grèce, la Hongrie, Chypre, le Luxembourg, Malte et la Pologne, pour lesquels les données sont manquantes. ","EU-28: Europäische Union der 28 Mitgliedstaaten (ohne Frankreich, Griechenland, Ungarn, Zypern, Luxemburg, Malta und Polen, von denen keine Daten vorliegen).","UE-28: Unione Europea dei 28 ad eccezione di Francia, Grecia, Ungheria, Cipro, Lussemburgo, Malta e Polonia. Per questi Stati i dati mancano.",,,,,,**欧盟及欧洲自由贸易联盟成员国 <br> 欧盟28国：本图表不涵盖法国、希腊、匈牙利、塞浦路斯、卢森堡、马耳他、波兰几国的数据。
+EU,,UE-28 + AELE*,EU-28 + EFTA*,UE-28 + AELS *,,,,,,欧盟及欧洲自由贸易联盟成员国*
+OU,,Autres pays de l'UE-28 et AELE,Weitere Länder der EU-28 und der EFTA,Altri paesi dell'UE-28 e dell'AELS,,,,,,EFTA**之外的国家
+OTH,,Autres pays,Andere Länder,Altri paesi ,,,,,,其他国家
 source,Source,source,Quelle,Fonte,fonte,المصدر,Источник,Fuente,出典,来源
-source.name,,Eurostat,,,,,,,,
+source.name,Eurostat,Eurostat,Eurostat,Eurostat,Eurostat,,,,,欧洲统计局
 source.url,http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en,http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en,http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en,http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en,http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en,http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en,http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en,http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en,http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en,http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en
 code,Code,code,Code,Codice,código,الرمز,Код,código,コード,代码
-code.name,waffle,waffle,waffle,waffle,waffle,waffle,waffle,waffle,waffle,
+code.name,waffle,waffle,waffle,waffle,waffle,waffle,waffle,waffle,waffle,waffle
 code.url,https://github.com/hrbrmstr/waffle,https://github.com/hrbrmstr/waffle,https://github.com/hrbrmstr/waffle,https://github.com/hrbrmstr/waffle,https://github.com/hrbrmstr/waffle,https://github.com/hrbrmstr/waffle,https://github.com/hrbrmstr/waffle,https://github.com/hrbrmstr/waffle,https://github.com/hrbrmstr/waffle,https://github.com/hrbrmstr/waffle
-title.font,OpenSans-CondensedBold,OpenSans-CondensedBold,OpenSans-CondensedBold,OpenSans-CondensedBold,OpenSans-CondensedBold,OpenSans-CondensedBold,OpenSans-CondensedBold,OpenSans-CondensedBold,Hiragino Sans W1,PingFang SC Light
-base.font,OpenSans-CondensedLight,OpenSans-CondensedLight,OpenSans-CondensedLight,OpenSans-CondensedLight,OpenSans-CondensedLight,OpenSans-CondensedLight,OpenSans-CondensedLight,OpenSans-CondensedLight,PingFang SC Semibold,PingFang SC Semibold
+title.font,OpenSans-CondensedBold,OpenSans-CondensedBold,OpenSans-CondensedBold,OpenSans-CondensedBold,OpenSans-CondensedBold,OpenSans-CondensedBold,OpenSans-CondensedBold,OpenSans-CondensedBold,PingFang SC Semibold,PingFang SC Semibold
+base.font,OpenSans-CondensedLight,OpenSans-CondensedLight,OpenSans-CondensedLight,OpenSans-CondensedLight,OpenSans-CondensedLight,OpenSans-CondensedLight,OpenSans-CondensedLight,OpenSans-CondensedLight,Hiragino Sans W1,PingFang SC Light

@@ -11,11 +11,96 @@ output: html_document
 * [SEM libre circulation](https://www.sem.admin.ch/sem/fr/home/themen/fza_schweiz-eu-efta.html) AELE + EU
 * To check the graphic!! [Eurostat Non-national population by group of citizenship](http://ec.europa.eu/eurostat/statistics-explained/index.php/File:Non-national_population_by_group_of_citizenship,_1_January_2015_(¹)_YB16.png)
 
+## Related
+
+* [Metrocosm Which EU Country Has the Most Citizens Living Abroad?](http://metrocosm.com/eu-diaspora-map/)
+* [Metrocosm The Ins and Outs of Immigration in the European Union](http://metrocosm.com/mapping-eu-immigration/)
+* [Intra-european living elsewhere](http://www.economist.com/news/europe/21704813-eus-cherished-free-movement-rights-are-less-secure-they-seem-europes-scapegoat)
+
 ## Text snippets
 
 Nationalité des ressortissants. Pour les pays pour lequels procesus naturalisation facile, part d'étrangers. 
 
-* The number of people residing in an EU Member State with citizenship of a non-member country on 1 January 2015 was 19.8 million, representing 3.9 % of the EU-28 population. In addition, there were 15.3 million persons living in one of the EU Member States on 1 January 2015 with the citizenship of another EU Member State. [Eurostat Migration and migrant population statistics](The number of people residing in an EU Member State with citizenship of a non-member country on 1 January 2015 was 19.8 million, representing 3.9 % of the EU-28 population. In addition, there were 15.3 million persons living in one of the EU Member States on 1 January 2015 with the citizenship of another EU Member State.) 
+* The number of people residing in an EU Member State with citizenship of a non-member country on 1 January 2015 was 19.8 million, representing 3.9 % of the EU-28 population. In addition, there were 15.3 million persons living in one of the EU Member States on 1 January 2015 with the citizenship of another EU Member State. [Eurostat Migration and migrant population statistics](http://ec.europa.eu/eurostat/statistics-explained/index.php/Migration_and_migrant_population_statistics) 
+
+* [Libre circulation et l'Union europénne](http://www.vie-publique.fr/chronologie/chronos-thematiques/libre-circulation-personnes-union-europeenne.html)  En 1985, cinq pays (l’Allemagne, la Belgique, la France, le Luxembourg et les Pays-Bas) décident d’étendre aux ressortissants de pays tiers le bénéfice de la libre circulation sur leur territoire et de créer entre eux un territoire sans frontières, l’Espace Schengen, du nom de la ville luxembourgeoise où est signé le premier accord. En 2015, l’espace Schengen regroupe 26 pays et concerne près de 420 millions d’habitants. 22 pays membres de l’Union européenne ont adhéré aux Accords de Schengen (le Royaume-Uni, l’Irlande, la Bulgarie, la Roumanie, Chypre et la Croatie n’en font pas partie). L’Espace Schengen comprend aussi quatre États non-membres de l’UE (Norvège, Islande, Suisse et Liechtenstein)
+
+* [OECD migration outlook 2016](http://www.oecd-ilibrary.org/social-issues-migration-health/international-migration-outlook-2016_migr_outlook-2016-en)
+
+# Text
+
+## La libre circulation et l'immigration en Europe. 
+
+Montée de la droite populiste en Europe, Brexit, vote en Suisse en faveur d'un contrôle plus strict de l'immigration. 
+
+L'immigration est un sujet brûlant en Europe. Montée de la droite populiste dans plusieurs pays, la libre circulation est sous pression. Mais quand est-il de la migration intra-européenne. Les profils de l'immigration est très différent au sein de l'Europe. Décryptage en graphiques.
+
+
+
+Avec la montée de la droite populiste. It is easily forgotten that migration from southeast to northwest has a significant impact on a drain of talent away from the southeast to the northwest.
+
+
+Ca fait aujourd'hui plus de 14 ans que la Suisse a rejoint l'Union Européenne sur l’accord de la libre circulation. Ces accords permettent aux citoyens membres de ce club d'étudier, de travailler et de prendre leur retraite n'importe d'où dans l'Union Européenne ainsi que dans l'AELE (Norvège, Suisse, Lichenstein Islande).. La libre circulation complémentent les 3 autres libertés de l'UE, que sont la liberté des biens, des capitaux et des services. 
+
+
+Qui considère-t-on comme «immigré»?
+Afin d'avoir une idée de ce que pourrait résulter en l'absence de libre circulation.  comparer Les caractéristiques de la population étrangère dépendent de plusieurs facteurs: l’histoire des flux migratoires, l’accroissement naturel de la population étrangère et les naturalisations. En Suisse où le processus de naturalisation 
+
+
+
+Mais la libre circulation est sous pression, avec l'acceptation du Brexit cette année et en Suisse. 
+Il clair qu'
+Sans même mentionner les tensions au sein de l'Union pour répondre aux défis de l'afflux de demandeurs d'asile. 
+
+
+
+Après l'onde de choc provoquée par le Brexit, la Suisse se pose la question de l’avenir de sa voie bilatérale.
+
+
+
+Ca fait aujourd'hui plus de La libre circulation est sous pression. 
+le peuple a ainsi approuvé à une courte majorité une initiative populaire demandant un contrôle plus strict de l'immigration.
+
+Sans mentionnier ici l'afflux de demandes d'asiles 
+
+## Studio
+
+L’immigration est au coeur des débats politiques en Europe avec en ligne de mire la libre circulation des personnes. Les profils de l'immigration diffèrent largement au sein des pays européens. Un tour d'horizon et décryptage en graphiques.
+
+content/42469286
+
+Ca fait aujourd'hui plus de 14 ans que l’accord sur la libre circulation des personnes entre la Suisse et l'Union Européenne  (UE) est en vigueur. Avec cet accord, les citoyens membres de ce club select peuvent étudier, travailler et prendre leur retraite n'importe d'où dans l'UE et dans l'Association européenne de libre-échange (AELE, comprenant la Norvège, la Suisse, le Liechtenstein et l'Islande). La libre circulation des personnes complémentent les 3 autres libertés de l'UE garanties par le marché unique, la liberté des biens, des capitaux et des services. 
+
+Au Royaume-Uni tout comme en Suisse, la libre circulation des personnes est potentiellement remise en question avec la volonté exprimée de leur peuple de mieux pouvoir réguler l'immigration. Comme discuté dans l'épisode précédent, la majorité des immigrants en Europe proviennent du vieux continent et la libre circulation favorise évidemment cette migration intra-européenne. 
+
+Comme illustré par la carte ci-dessus, la balance migratoire diffère largement dans différentes regions d'Europe. Sans surprise, ce sont les pays et régions les plus riches qui attirent le plus d'immigrés. La Suisse, l'Allemagne, l'Autriche, le Royaume-Uni ainsi que les pays scandinaves affichent une balance migratoire largement positive.
+
+Parmis tous les états membres de l'UE et de l'AELE, on dénombrait plus de 37,7 millions de ressortissants étrangers en 2015, soit près de 8% de la population. Plus de 45% de ces étrangers disposent de la nationalité d'un autre pays membre.
+
+
+
+Le graphique ci-dessous présente la nationalité des immigrants pour différents pays d'Europe. Une large proportion d'immigrants proviennent de l'Europe de l'Est et du Sud. Les Roumains et les Polonais représentent à eux seuls près de 30% des etrangers de l'UE + AELE, mais les profils de l'immigration en Europe diffèrent largement d'un pays à l'autre. 
+
+Différentes études ont montré la libre circulation des personnes ont un effet principalement positif pour les pays hôtes. Contrairement à certains discours populistes, les immigrants rapportent généralement d'avantage d'argent à l'Etat que leurs coûts. https://www.oecd.org/migration/OECD%20Migration%20Policy%20Debates%20Numero%202.pdf
+
+La libre circulation a largement contribué à la croissance de l'emploi https://www.seco.admin.ch/seco/fr/home/seco/nsb-news.msg-id-49206.html
+
+
+Mais pour les pays nataux de immigrants, la libre circulation peut également poser problème. La fuite des plus jeunes et des plus éduqués peuvent être un frein à la croissance tant économique que démographique. 
+
+
+content/42409190
+
+content/42392104
+
+content/42463826
+
+
+
+
+
+
+
 
 
 ```{r setup, include=FALSE}
@@ -23,10 +108,7 @@ printTest <- F
 translation.file <- 'input/European migration waffe - Sheet1.csv'
 
 iso2.sub <- c('CH', 'DE', 'IT', 'GB', 'ES', 'PT','AT', 'RO')
-
 infile <- "input/data_pop_2015.csv"
-
-
 
 library(readr)
 library(tidyr)
@@ -70,14 +152,17 @@ if(length(cidx > 0)) {
 }
 colnames(txt)
 
-
-
 # Some test
 if(printTest) {
 data %>% filter(geo_code == "CH") %>% as.data.frame()
 data %>% filter(geo_code %in% iso2.sub) %>% group_by(citizen_code, citizen) %>%
   summarise(tot = sum(values)) %>% ungroup() %>% arrange(desc(tot)) %>% head(20)  
 }
+
+## EU stats
+
+keyn <- data %>% filter(geo_code %in% eu.ct)
+
 
 ```
 ### Compute the sum for EU-28 + EFTA
@@ -190,11 +275,11 @@ cit$color <-  c(colors, colorRampPalette(colors = c("#336666", "#ab3d3f"))(nrow(
 totF <- df %>% group_by(geo_code) %>% summarise(tot = sum(share)) %>% ungroup() %>% arrange(desc(tot))
 
 
-wtheme <- function(title.font = "OpenSans-CondensedBold", base.font = "OpenSans-CondensedLight") {
+wtheme <- function(title.font = "OpenSans-CondensedBold", base.font = "OpenSans-CondensedLight", legend.text.size = 16) {
   theme(
-    plot.title = element_text(family = title.font, size = 21, margin = margin(b = 28), colour = "#404040"),
+    plot.title = element_text(family = title.font, size = 21, margin = margin(b = 29), colour = "#404040"),
     legend.title = element_text(family = base.font, size = 12, color = "#595959") ,
-    legend.text = element_text(family = base.font, size = 16),
+    legend.text = element_text(family = base.font, size = legend.text.size),
     legend.key.width = unit(1.6, "lines"),
     legend.key.height = unit(1, "lines"),
     legend.position=c(0,1.08), 
@@ -225,14 +310,20 @@ for(lang in colnames(txt)) {
     eu.log <- ddd$citizen_code %in% c(eu.ct, "OU") 
     ddd <- ddd[c(which(eu.log), which(!eu.log)),]
     
+    # vector: values & translated country names
     dddd <- structure(
       ddd$share, names = countryTranslation(ddd$citizen_code, lang)[,-1])
-    
+    # for non-exsistent tranlsation get it from the google sheet
     codes <- unlist(ddd[which(is.na(names(dddd))), "citizen_code"], use.names = F)
     names(dddd)[which(is.na(names(dddd)))] <- txt[codes, lang]
     if(any(is.na(names(dddd)))) {stop ()}
+    # add space at the end of the country translation
+    names(dddd) <- paste0(names(dddd), "  ")
+    
     title <- paste0(ifelse(iso == "EU", txt['EU', lang], countryTranslation(iso, lang)[-1]), "\n")
     pad <- ncol - floor(sum(ddd$share) / nrow)
+    
+    legend.text.size <- ifelse(lang == 'ZH', 14, 16)
     
     suppressWarnings(
       waffle(
@@ -240,7 +331,7 @@ for(lang in colnames(txt)) {
         colors = cit[match(ddd$citizen_code, cit$citizen_code), 'color'] %>% 
           unlist(use.names = F), legend_pos = "top", 
         title = title, xlab = "\n") +
-        wtheme(title.font = txt["title.font", lang], base.font = txt["base.font", lang]) + 
+        wtheme(title.font = txt["title.font", lang], base.font = txt["base.font", lang], legend.text.size = legend.text.size) + 
         guides(fill=guide_legend(nrow=2,byrow=F, title = paste0(pc, txt["subtitle1", lang])))
     )
   })
@@ -256,7 +347,8 @@ for(lang in colnames(txt)) {
   source <- paste0(
     txt['source', lang], ": ", htmlLink(txt['source.url', lang], txt['source.name', lang]), " | ",
     txt['code', lang], ": ", htmlLink(txt['code.url', lang], txt['code.name', lang]), " | ",
-    htmlLink("http://www.swissinfo.ch", 'swissinfo.ch')               
+    htmlLink("http://www.swissinfo.ch", 'swissinfo.ch'), " | ",
+    htmlLink("https://twitter.com/duc_qn", '@duc_qn')    
   )
   footer <- paste0(txt["footer1", lang], "<br>", txt["footer2", lang])
   
