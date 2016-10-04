@@ -176,7 +176,7 @@ for(lang in colnames(txt)) {
     scale_x_continuous(limits = c(-10.5, 45.5), name = &quot;&quot;, expand = c(0,0)) +
     scale_y_continuous(limits = c(33, 71.5), name = &quot;&quot;, expand = c(0,0)) +
     #coord_quickmap(expand = F)  +  xlim(c(-11, 45)) + ylim(c(34, 71.5)) +
-    mapTheme() + 
+    mapTheme(base_family = txt[&quot;base.font&quot;, lang]) + 
     scale_fill_manual(values = swi_dpal3, name = paste0(txt['leg.title', lang], &quot;  &quot;)) +
     geom_polygon(data = ct, aes(x=long,y=lat,group=group, id = group),
                  fill =NA, colour = &quot;#737373&quot;, size = 0.1)
@@ -224,6 +224,17 @@ for(lang in colnames(txt)) {
       
 }</code></pre>
 <pre><code>## 
+##  EN</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: data_id, tooltip</code></pre>
+<pre><code>## Warning: `panel.margin` is deprecated. Please use `panel.spacing` property
+## instead</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: id</code></pre>
+<pre><code>## Warning: Removed 465 rows containing missing values
+## (geom_interactive_polygon).</code></pre>
+<pre><code>## Warning in file.rename(from = fileToMove, to = paste0(&quot;output/&quot;,
+## fileToMove)): cannot rename file 'js' to 'output/js', reason 'Directory not
+## empty'</code></pre>
+<pre><code>## 
 ##  FR</code></pre>
 <pre><code>## Warning: Ignoring unknown aesthetics: data_id, tooltip</code></pre>
 <pre><code>## Warning: `panel.margin` is deprecated. Please use `panel.spacing` property
@@ -247,6 +258,50 @@ for(lang in colnames(txt)) {
 ## empty'</code></pre>
 <pre><code>## 
 ##  IT</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: data_id, tooltip</code></pre>
+<pre><code>## Warning: `panel.margin` is deprecated. Please use `panel.spacing` property
+## instead</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: id</code></pre>
+<pre><code>## Warning: Removed 465 rows containing missing values
+## (geom_interactive_polygon).</code></pre>
+<pre><code>## Warning in file.rename(from = fileToMove, to = paste0(&quot;output/&quot;,
+## fileToMove)): cannot rename file 'js' to 'output/js', reason 'Directory not
+## empty'</code></pre>
+<pre><code>## 
+##  PT</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: data_id, tooltip</code></pre>
+<pre><code>## Warning: `panel.margin` is deprecated. Please use `panel.spacing` property
+## instead</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: id</code></pre>
+<pre><code>## Warning: Removed 465 rows containing missing values
+## (geom_interactive_polygon).</code></pre>
+<pre><code>## Warning in file.rename(from = fileToMove, to = paste0(&quot;output/&quot;,
+## fileToMove)): cannot rename file 'js' to 'output/js', reason 'Directory not
+## empty'</code></pre>
+<pre><code>## 
+##  AR</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: data_id, tooltip</code></pre>
+<pre><code>## Warning: `panel.margin` is deprecated. Please use `panel.spacing` property
+## instead</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: id</code></pre>
+<pre><code>## Warning: Removed 465 rows containing missing values
+## (geom_interactive_polygon).</code></pre>
+<pre><code>## Warning in file.rename(from = fileToMove, to = paste0(&quot;output/&quot;,
+## fileToMove)): cannot rename file 'js' to 'output/js', reason 'Directory not
+## empty'</code></pre>
+<pre><code>## 
+##  RU</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: data_id, tooltip</code></pre>
+<pre><code>## Warning: `panel.margin` is deprecated. Please use `panel.spacing` property
+## instead</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: id</code></pre>
+<pre><code>## Warning: Removed 465 rows containing missing values
+## (geom_interactive_polygon).</code></pre>
+<pre><code>## Warning in file.rename(from = fileToMove, to = paste0(&quot;output/&quot;,
+## fileToMove)): cannot rename file 'js' to 'output/js', reason 'Directory not
+## empty'</code></pre>
+<pre><code>## 
+##  ES</code></pre>
 <pre><code>## Warning: Ignoring unknown aesthetics: data_id, tooltip</code></pre>
 <pre><code>## Warning: `panel.margin` is deprecated. Please use `panel.spacing` property
 ## instead</code></pre>

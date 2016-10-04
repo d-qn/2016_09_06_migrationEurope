@@ -177,8 +177,8 @@ $(document).ready(function () {
 <p>content/42409190</p>
 <p>content/42392104</p>
 <p>content/42463826</p>
-<pre><code>## Warning: EN  PT  AR  RU  ES  JA languages will be discarded!</code></pre>
-<pre><code>## [1] &quot;FR&quot; &quot;DE&quot; &quot;IT&quot; &quot;ZH&quot;</code></pre>
+<pre><code>## Warning: JA languages will be discarded!</code></pre>
+<pre><code>## [1] &quot;EN&quot; &quot;FR&quot; &quot;DE&quot; &quot;IT&quot; &quot;PT&quot; &quot;AR&quot; &quot;RU&quot; &quot;ES&quot; &quot;ZH&quot;</code></pre>
 <div id="compute-the-sum-for-eu-28-efta" class="section level3">
 <h3>Compute the sum for EU-28 + EFTA</h3>
 <pre class="r"><code>## for all EU &amp; EFTA countries check how complete is the citizen data
@@ -265,7 +265,7 @@ for(lang in colnames(txt)) {
     
     # vector: values &amp; translated country names
     dddd &lt;- structure(
-      ddd$share, names = countryTranslation(ddd$citizen_code, lang)[,-1])
+      ddd$share, names = countryTranslation(ddd$citizen_code, ifelse(lang == 'AR', 'EN', lang))[,-1])
     # for non-exsistent tranlsation get it from the google sheet
     codes &lt;- unlist(ddd[which(is.na(names(dddd))), &quot;citizen_code&quot;], use.names = F)
     names(dddd)[which(is.na(names(dddd)))] &lt;- txt[codes, lang]
@@ -273,7 +273,7 @@ for(lang in colnames(txt)) {
     # add space at the end of the country translation
     names(dddd) &lt;- paste0(names(dddd), &quot;  &quot;)
     
-    title &lt;- paste0(ifelse(iso == &quot;EU&quot;, txt['EU', lang], countryTranslation(iso, lang)[-1]), &quot;\n&quot;)
+    title &lt;- paste0(ifelse(iso == &quot;EU&quot;, txt['EU', lang], countryTranslation(iso, ifelse(lang == 'AR', 'EN', lang))[-1]), &quot;\n&quot;)
     pad &lt;- ncol - floor(sum(ddd$share) / nrow)
     
     legend.text.size &lt;- ifelse(lang == 'ZH', 14, 16)
@@ -322,6 +322,56 @@ for(lang in colnames(txt)) {
   # move stuff
   file.rename(from = w.html, to = paste0(&quot;output/&quot;, w.html))    
 }</code></pre>
+<pre><code>## 
+##  CH
+##  AT
+##  ES
+##  DE
+##  GB
+##  IT
+##  EU
+##  PT
+##  RO</code></pre>
+<pre><code>## 
+##  CH
+##  AT
+##  ES
+##  DE
+##  GB
+##  IT
+##  EU
+##  PT
+##  RO</code></pre>
+<pre><code>## 
+##  CH
+##  AT
+##  ES
+##  DE
+##  GB
+##  IT
+##  EU
+##  PT
+##  RO</code></pre>
+<pre><code>## 
+##  CH
+##  AT
+##  ES
+##  DE
+##  GB
+##  IT
+##  EU
+##  PT
+##  RO</code></pre>
+<pre><code>## 
+##  CH
+##  AT
+##  ES
+##  DE
+##  GB
+##  IT
+##  EU
+##  PT
+##  RO</code></pre>
 <pre><code>## 
 ##  CH
 ##  AT

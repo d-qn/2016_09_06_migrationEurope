@@ -117,8 +117,8 @@ mapTheme <- function(
       panel.grid.minor = element_blank(),
       panel.border = element_blank(),
       plot.background = element_rect(fill = NULL),
-      legend.text = element_text(colour = colourText_bkbg, size = 6, hjust = 1),
-      legend.title = element_text(colour = colourText_bkbg, size = 9),
+      legend.text = element_text(colour = colourText_bkbg, size = 6, hjust = 1, family = base_family),
+      legend.title = element_text(colour = colourText_bkbg, size = 9, family = base_family),
       legend.key = element_blank(),
       legend.key.width = unit(0.9, "lines"),
       legend.key.height = unit(0.9, "lines"),
@@ -173,7 +173,7 @@ for(lang in colnames(txt)) {
     scale_x_continuous(limits = c(-10.5, 45.5), name = "", expand = c(0,0)) +
     scale_y_continuous(limits = c(33, 71.5), name = "", expand = c(0,0)) +
     #coord_quickmap(expand = F)  +  xlim(c(-11, 45)) + ylim(c(34, 71.5)) +
-    mapTheme() + 
+    mapTheme(base_family = txt["base.font", lang]) + 
     scale_fill_manual(values = swi_dpal3, name = paste0(txt['leg.title', lang], "  ")) +
     geom_polygon(data = ct, aes(x=long,y=lat,group=group, id = group),
                  fill =NA, colour = "#737373", size = 0.1)

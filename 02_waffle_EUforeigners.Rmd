@@ -278,7 +278,7 @@ totF <- df %>% group_by(geo_code) %>% summarise(tot = sum(share)) %>% ungroup() 
 wtheme <- function(title.font = "OpenSans-CondensedBold", base.font = "OpenSans-CondensedLight", legend.text.size = 16) {
   theme(
     plot.title = element_text(family = title.font, size = 21, margin = margin(b = 29), colour = "#404040"),
-    legend.title = element_text(family = base.font, size = 12, color = "#595959") ,
+    legend.title = element_text(family = base.font, size = 12, color = "#404040") ,
     legend.text = element_text(family = base.font, size = legend.text.size),
     legend.key.width = unit(1.6, "lines"),
     legend.key.height = unit(1, "lines"),
@@ -312,7 +312,7 @@ for(lang in colnames(txt)) {
     
     # vector: values & translated country names
     dddd <- structure(
-      ddd$share, names = countryTranslation(ddd$citizen_code, lang)[,-1])
+      ddd$share, names = countryTranslation(ddd$citizen_code, ifelse(lang == 'AR', 'EN', lang))[,-1])
     # for non-exsistent tranlsation get it from the google sheet
     codes <- unlist(ddd[which(is.na(names(dddd))), "citizen_code"], use.names = F)
     names(dddd)[which(is.na(names(dddd)))] <- txt[codes, lang]
@@ -320,7 +320,7 @@ for(lang in colnames(txt)) {
     # add space at the end of the country translation
     names(dddd) <- paste0(names(dddd), "  ")
     
-    title <- paste0(ifelse(iso == "EU", txt['EU', lang], countryTranslation(iso, lang)[-1]), "\n")
+    title <- paste0(ifelse(iso == "EU", txt['EU', lang], countryTranslation(iso, ifelse(lang == 'AR', 'EN', lang))[-1]), "\n")
     pad <- ncol - floor(sum(ddd$share) / nrow)
     
     legend.text.size <- ifelse(lang == 'ZH', 14, 16)
