@@ -128,7 +128,6 @@ eu$EUEFTA <- eu$EFTA_FOR + eu$EU28_FOR
 eu %<>% select(-EFTA_FOR, -EU28_FOR) %>% arrange(desc(values))
 
 
-
 eut <- data %>% filter(geo_code %in% eu.ct) %>% group_by(citizen) %>%
   summarise(totNat = sum(values)) %>% ungroup() %>% arrange(desc(totNat)) %>%
   mutate(TOT = sum(totNat))
@@ -195,9 +194,13 @@ df <- rbind(df, mergeCit(eu))
 cit <- df %>% group_by(citizen_code) %>% summarise(tot = sum(share)) %>%
   ungroup() %>% arrange(desc(tot))
 
-colors <- c( "#dbd6db", "#e5dbcd",
-            "#ab3d3f", "#666699", "#669999", "#663333", "#336666", "#366096", "#333366", "#996699", "#ac673e", "#3a9736", "#999966", "#666633", "#89a23a", "#368596", "#996666", 
-            brewer.pal(name = "Set3", n = 12))
+
+colors <- c( '#f8eded', '#c2d0d6', swi_col, "#666699", "#336666", "#366096", "#333366", "#996699", "#ac673e", "#3a9736", "#999966", "#666633", "#89a23a", "#368596", "#996666",
+             brewer.pal(name = "Set3", n = 12))
+
+# colors <- c( "#dbd6db", "#e5dbcd",
+#             "#ab3d3f", "#666699", "#669999", "#663333", "#336666", "#366096", "#333366", "#996699", "#ac673e", "#3a9736", "#999966", "#666633", "#89a23a", "#368596", "#996666", 
+#             brewer.pal(name = "Set3", n = 12))
 if(nrow(cit) > length(colors)) {
   cit$color <-  c(colors, colorRampPalette(colors = c("#336666", "#ab3d3f"))(nrow(cit)- length(colors)))  
 } else {
@@ -210,12 +213,13 @@ totF <- df %>% group_by(geo_code) %>% summarise(tot = sum(share)) %>% ungroup() 
 
 wtheme <- function(title.font = "OpenSans-CondensedBold", base.font = "OpenSans-CondensedLight", legend.text.size = 16) {
   theme(
-    plot.title = element_text(family = title.font, size = 21, margin = margin(b = 29), colour = "#404040"),
+    plot.title = element_text(family = title.font, size = 21, margin = margin(b = 32), colour = "#404040"),
+    plot.margin = unit(c(0, 0, 0, 0), "cm"),
     legend.title = element_text(family = base.font, size = 12, color = "#404040") ,
     legend.text = element_text(family = base.font, size = legend.text.size),
     legend.key.width = unit(1.6, "lines"),
     legend.key.height = unit(1, "lines"),
-    legend.position=c(0,1.08), 
+    legend.position=c(-0.007,1.07), 
     legend.justification=c(0, 0)
   ) 
 }
@@ -256,14 +260,16 @@ for(lang in colnames(txt)) {
     title <- paste0(ifelse(iso == "EU", txt['EU', lang], countryTranslation(iso, ifelse(lang == 'AR', 'EN', lang))[-1]), "\n")
     pad <- ncol - floor(sum(ddd$share) / nrow)
     
-    legend.text.size <- ifelse(lang %in% c('ZH', 'JA'), 12.5, 16)
+    legend.text.size <- ifelse(lang %in% c('ZH', 'JA'), 12, 14.5)
     
     suppressWarnings(
       waffle(
         dddd, rows = nrow , size=size, pad = pad, 
         colors = cit[match(ddd$citizen_code, cit$citizen_code), 'color'] %>% 
-          unlist(use.names = F), legend_pos = "top", 
-        title = title, xlab = "\n") +
+          unlist(use.names = F), 
+        legend_pos = "top", 
+        title = title, xlab = "\n"
+      ) +
         wtheme(title.font = txt["title.font", lang], base.font = txt["base.font", lang], legend.text.size = legend.text.size) + 
         guides(fill=guide_legend(nrow=2,byrow=F, title = paste0(pc, txt["subtitle1", lang])))
     )
@@ -272,7 +278,7 @@ for(lang in colnames(txt)) {
   w.path <- paste0("output/waffle_chart_2016_" , lang, ".png")
   w.html <- paste0("waffle_charts_" , lang, ".html")
   
-  png(w.path,  res = 250, pointsize = 12, height = 4700, 
+  png(w.path,  res = 250, pointsize = 12, height = 4770, 
       width = 2000)
   iron( wf[[7]], wf[[1]], wf[[2]], wf[[3]], wf[[4]], wf[[5]], wf[[6]],  wf[[8]], wf[[9]])
   dev.off()
