@@ -177,8 +177,7 @@ $(document).ready(function () {
 <p>content/42409190</p>
 <p>content/42392104</p>
 <p>content/42463826</p>
-<pre><code>## Warning: JA languages will be discarded!</code></pre>
-<pre><code>## [1] &quot;EN&quot; &quot;FR&quot; &quot;DE&quot; &quot;IT&quot; &quot;PT&quot; &quot;AR&quot; &quot;RU&quot; &quot;ES&quot; &quot;ZH&quot;</code></pre>
+<pre><code>##  [1] &quot;EN&quot; &quot;FR&quot; &quot;DE&quot; &quot;IT&quot; &quot;PT&quot; &quot;AR&quot; &quot;RU&quot; &quot;ES&quot; &quot;JA&quot; &quot;ZH&quot;</code></pre>
 <div id="compute-the-sum-for-eu-28-efta" class="section level3">
 <h3>Compute the sum for EU-28 + EFTA</h3>
 <pre class="r"><code>## for all EU &amp; EFTA countries check how complete is the citizen data
@@ -276,7 +275,7 @@ for(lang in colnames(txt)) {
     title &lt;- paste0(ifelse(iso == &quot;EU&quot;, txt['EU', lang], countryTranslation(iso, ifelse(lang == 'AR', 'EN', lang))[-1]), &quot;\n&quot;)
     pad &lt;- ncol - floor(sum(ddd$share) / nrow)
     
-    legend.text.size &lt;- ifelse(lang == 'ZH', 14, 16)
+    legend.text.size &lt;- ifelse(lang %in% c('ZH', 'JA'), 12.5, 16)
     
     suppressWarnings(
       waffle(
@@ -322,6 +321,16 @@ for(lang in colnames(txt)) {
   # move stuff
   file.rename(from = w.html, to = paste0(&quot;output/&quot;, w.html))    
 }</code></pre>
+<pre><code>## 
+##  CH
+##  AT
+##  ES
+##  DE
+##  GB
+##  IT
+##  EU
+##  PT
+##  RO</code></pre>
 <pre><code>## 
 ##  CH
 ##  AT

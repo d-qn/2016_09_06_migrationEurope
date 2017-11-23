@@ -187,11 +187,10 @@ for(lang in colnames(txt)) {
     zoom_max = 2, 
     tooltip_extra_css = tooltip_css,
     hover_css = hover_css,
-    fontname_sans = 'Open Sans Condensed'
+    fonts = list(sans = "Open Sans")
   )
   
   html.outfile <- paste0("regionalEUmap_netMigration_", lang, ".html")
-  
   
   source <- paste0(
     txt['source', lang], ": ", htmlLink(txt['source.url', lang], txt['source.name', lang]), " & ",

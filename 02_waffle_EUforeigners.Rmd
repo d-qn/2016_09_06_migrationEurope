@@ -323,7 +323,7 @@ for(lang in colnames(txt)) {
     title <- paste0(ifelse(iso == "EU", txt['EU', lang], countryTranslation(iso, ifelse(lang == 'AR', 'EN', lang))[-1]), "\n")
     pad <- ncol - floor(sum(ddd$share) / nrow)
     
-    legend.text.size <- ifelse(lang == 'ZH', 14, 16)
+    legend.text.size <- ifelse(lang %in% c('ZH', 'JA'), 12.5, 16)
     
     suppressWarnings(
       waffle(

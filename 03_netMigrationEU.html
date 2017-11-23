@@ -95,6 +95,7 @@ button.code-folding-btn:focus {
 </style>
 
 
+
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
@@ -190,11 +191,10 @@ for(lang in colnames(txt)) {
     zoom_max = 2, 
     tooltip_extra_css = tooltip_css,
     hover_css = hover_css,
-    fontname_sans = 'Open Sans Condensed'
+    fonts = list(sans = &quot;Open Sans&quot;)
   )
   
   html.outfile &lt;- paste0(&quot;regionalEUmap_netMigration_&quot;, lang, &quot;.html&quot;)
-  
   
   source &lt;- paste0(
     txt['source', lang], &quot;: &quot;, htmlLink(txt['source.url', lang], txt['source.name', lang]), &quot; &amp; &quot;,
@@ -229,6 +229,7 @@ for(lang in colnames(txt)) {
 <pre><code>## Warning: `panel.margin` is deprecated. Please use `panel.spacing` property
 ## instead</code></pre>
 <pre><code>## Warning: Ignoring unknown aesthetics: id</code></pre>
+<pre><code>## Warning: package 'gdtools' was built under R version 3.3.2</code></pre>
 <pre><code>## Warning: Removed 465 rows containing missing values
 ## (geom_interactive_polygon).</code></pre>
 <pre><code>## Warning in file.rename(from = fileToMove, to = paste0(&quot;output/&quot;,
@@ -312,6 +313,17 @@ for(lang in colnames(txt)) {
 ## fileToMove)): cannot rename file 'js' to 'output/js', reason 'Directory not
 ## empty'</code></pre>
 <pre><code>## 
+##  JA</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: data_id, tooltip</code></pre>
+<pre><code>## Warning: `panel.margin` is deprecated. Please use `panel.spacing` property
+## instead</code></pre>
+<pre><code>## Warning: Ignoring unknown aesthetics: id</code></pre>
+<pre><code>## Warning: Removed 465 rows containing missing values
+## (geom_interactive_polygon).</code></pre>
+<pre><code>## Warning in file.rename(from = fileToMove, to = paste0(&quot;output/&quot;,
+## fileToMove)): cannot rename file 'js' to 'output/js', reason 'Directory not
+## empty'</code></pre>
+<pre><code>## 
 ##  ZH</code></pre>
 <pre><code>## Warning: Ignoring unknown aesthetics: data_id, tooltip</code></pre>
 <pre><code>## Warning: `panel.margin` is deprecated. Please use `panel.spacing` property
@@ -335,6 +347,7 @@ for(lang in colnames(txt)) {
 $(document).ready(function () {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
 });
+
 
 </script>
 
