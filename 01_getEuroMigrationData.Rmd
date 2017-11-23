@@ -24,7 +24,7 @@ output:
 downloadData <- F
 
 eu.pop.data.file <- "data/eurostat_pop_all.csv"
-outfile <- "input/data_pop_2015.csv"
+outfile <- "input/data_pop_2016.csv"
 
 # Eurostat data tables
 es.tb <- c('migr_pop1ctz')
@@ -75,14 +75,14 @@ if(downloadData) {
 
 ```{r some stats, results="asis", echo = F}
 eu.ct <- c(eu_countries[,1], efta_countries[,1])
-dd <- data %>% filter(geo_code %in% eu.ct) %>% filter(time == 2015)
+dd <- data %>% filter(geo_code %in% eu.ct) %>% filter(time == max(data$time))
 
 
 cat("\n### EU28")
 eu.toteu <- dd %>% filter(geo_code %in% eu_countries[,1], citizen_code == 'EU28_FOR') %>%
   select(values) %>% unlist(use.names = F) %>% sum()
 cat("\n* ", "Total number of EU28 foreigners in EU28 countries:", eu.toteu)
-eu.tot <- dd %>% filter(geo_code %in% eu_countries[,1], citizen_code == 'FOR') %>%
+eu.tot <- dd %>% filter(geo_code %in% eu_countries[,1], citizen_code == 'FOR_STLS') %>%
   select(values) %>% unlist(use.names = F) %>% sum()
 cat("\n* ", "Total number of foreigners in EU28 countries:", eu.tot)
 cat("\n* ", "Total number of non-EU28 foreigners in EU28 countries:", eu.tot - eu.toteu)
@@ -92,7 +92,7 @@ cat("\n\n### EU28 + EFTA foreigners")
 euefta.tot <- dd %>% filter(citizen_code %in% c('EU28_FOR', 'EFTA_FOR')) %>%
   select(values) %>% unlist(use.names = F) %>% sum()
 cat("\n* ", "Total number of EU28 + EFTA foreigners in EU28 + EFTA countries:", euefta.tot)
-for.tot <- dd %>% filter(citizen_code == "FOR") %>%
+for.tot <- dd %>% filter(citizen_code == "FOR_STLS") %>%
   select(values) %>% unlist(use.names = F) %>% sum()
 cat("\n* ", "Number of non-EU28/EFTA foreigners in EU28 + EFTA countries:", for.tot - euefta.tot)
 cat("\n* ", "Total number foreigners in EU28 + EFTA countries:", for.tot)
@@ -104,6 +104,8 @@ cat("\n*", euefta.totpop)
 cat("\n* Proportion foreigners", (for.tot / euefta.totpop) * 100)
 cat("\n* Proportion of EFTA/EU28-foreigners", (euefta.tot / euefta.totpop) * 100, "\n\n")
 ```
+
+
 ## Wrangle data for waffle chart
 
 ### remove useless aggregate citizenship
@@ -113,19 +115,19 @@ agg.idx <- which(nchar(levels(data$citizen_code)) > 2)
 
 #data[match(levels(data$citizen_code)[agg.idx], data$citizen_code),c("citizen", "citizen_code")]
 agg.iso2 <- levels(data$citizen_code)[agg.idx]
-iso2.keep <- c("NAT", "FOR", "EFTA_FOR", "EU28_FOR", "TOTAL")
+iso2.keep <- c("NAT", "FOR_STLS", "EFTA_FOR", "EU28_FOR", "TOTAL")
 agg.iso2 <- agg.iso2[!agg.iso2 %in% iso2.keep]
 
 
 # Place aggregates as new columns
-data %<>% filter(time == 2015) %>% select(-time)
+data %<>% filter(time == max(data$time)) %>% select(-time)
 
 data %<>%
   group_by(geo_code, geo) %>% 
   mutate(
     TOTAL = sum(values[citizen_code == "TOTAL"], na.rm = T),
     NAT = sum(values[citizen_code == "NAT"], na.rm = T),
-    FOR = sum(values[citizen_code == "FOR"], na.rm = T),
+    FOR = sum(values[citizen_code == "FOR_STLS"], na.rm = T),
     EFTA_FOR = sum(values[citizen_code == "EFTA_FOR"], na.rm = T),
     EU28_FOR = sum(values[citizen_code == "EU28_FOR"], na.rm = T)
   ) %>% ungroup() %>% filter(!citizen_code %in% levels(data$citizen_code)[agg.idx])

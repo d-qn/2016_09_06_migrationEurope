@@ -29,78 +29,6 @@ Nationalité des ressortissants. Pour les pays pour lequels procesus naturalisat
 
 # Text
 
-## La libre circulation et l'immigration en Europe. 
-
-Montée de la droite populiste en Europe, Brexit, vote en Suisse en faveur d'un contrôle plus strict de l'immigration. 
-
-L'immigration est un sujet brûlant en Europe. Montée de la droite populiste dans plusieurs pays, la libre circulation est sous pression. Mais quand est-il de la migration intra-européenne. Les profils de l'immigration est très différent au sein de l'Europe. Décryptage en graphiques.
-
-
-
-Avec la montée de la droite populiste. It is easily forgotten that migration from southeast to northwest has a significant impact on a drain of talent away from the southeast to the northwest.
-
-
-Ca fait aujourd'hui plus de 14 ans que la Suisse a rejoint l'Union Européenne sur l’accord de la libre circulation. Ces accords permettent aux citoyens membres de ce club d'étudier, de travailler et de prendre leur retraite n'importe d'où dans l'Union Européenne ainsi que dans l'AELE (Norvège, Suisse, Lichenstein Islande).. La libre circulation complémentent les 3 autres libertés de l'UE, que sont la liberté des biens, des capitaux et des services. 
-
-
-Qui considère-t-on comme «immigré»?
-Afin d'avoir une idée de ce que pourrait résulter en l'absence de libre circulation.  comparer Les caractéristiques de la population étrangère dépendent de plusieurs facteurs: l’histoire des flux migratoires, l’accroissement naturel de la population étrangère et les naturalisations. En Suisse où le processus de naturalisation 
-
-
-
-Mais la libre circulation est sous pression, avec l'acceptation du Brexit cette année et en Suisse. 
-Il clair qu'
-Sans même mentionner les tensions au sein de l'Union pour répondre aux défis de l'afflux de demandeurs d'asile. 
-
-
-
-Après l'onde de choc provoquée par le Brexit, la Suisse se pose la question de l’avenir de sa voie bilatérale.
-
-
-
-Ca fait aujourd'hui plus de La libre circulation est sous pression. 
-le peuple a ainsi approuvé à une courte majorité une initiative populaire demandant un contrôle plus strict de l'immigration.
-
-Sans mentionnier ici l'afflux de demandes d'asiles 
-
-## Studio
-
-L’immigration est au coeur des débats politiques en Europe avec en ligne de mire la libre circulation des personnes. Les profils de l'immigration diffèrent largement au sein des pays européens. Un tour d'horizon et décryptage en graphiques.
-
-content/42469286
-
-Ca fait aujourd'hui plus de 14 ans que l’accord sur la libre circulation des personnes entre la Suisse et l'Union Européenne  (UE) est en vigueur. Avec cet accord, les citoyens membres de ce club select peuvent étudier, travailler et prendre leur retraite n'importe d'où dans l'UE et dans l'Association européenne de libre-échange (AELE, comprenant la Norvège, la Suisse, le Liechtenstein et l'Islande). La libre circulation des personnes complémentent les 3 autres libertés de l'UE garanties par le marché unique, la liberté des biens, des capitaux et des services. 
-
-Au Royaume-Uni tout comme en Suisse, la libre circulation des personnes est potentiellement remise en question avec la volonté exprimée de leur peuple de mieux pouvoir réguler l'immigration. Comme discuté dans l'épisode précédent, la majorité des immigrants en Europe proviennent du vieux continent et la libre circulation favorise évidemment cette migration intra-européenne. 
-
-Comme illustré par la carte ci-dessus, la balance migratoire diffère largement dans différentes regions d'Europe. Sans surprise, ce sont les pays et régions les plus riches qui attirent le plus d'immigrés. La Suisse, l'Allemagne, l'Autriche, le Royaume-Uni ainsi que les pays scandinaves affichent une balance migratoire largement positive.
-
-Parmis tous les états membres de l'UE et de l'AELE, on dénombrait plus de 37,7 millions de ressortissants étrangers en 2015, soit près de 8% de la population. Plus de 45% de ces étrangers disposent de la nationalité d'un autre pays membre.
-
-
-
-Le graphique ci-dessous présente la nationalité des immigrants pour différents pays d'Europe. Une large proportion d'immigrants proviennent de l'Europe de l'Est et du Sud. Les Roumains et les Polonais représentent à eux seuls près de 30% des etrangers de l'UE + AELE, mais les profils de l'immigration en Europe diffèrent largement d'un pays à l'autre. 
-
-Différentes études ont montré la libre circulation des personnes ont un effet principalement positif pour les pays hôtes. Contrairement à certains discours populistes, les immigrants rapportent généralement d'avantage d'argent à l'Etat que leurs coûts. https://www.oecd.org/migration/OECD%20Migration%20Policy%20Debates%20Numero%202.pdf
-
-La libre circulation a largement contribué à la croissance de l'emploi https://www.seco.admin.ch/seco/fr/home/seco/nsb-news.msg-id-49206.html
-
-
-Mais pour les pays nataux de immigrants, la libre circulation peut également poser problème. La fuite des plus jeunes et des plus éduqués peuvent être un frein à la croissance tant économique que démographique. 
-
-
-content/42409190
-
-content/42392104
-
-content/42463826
-
-
-
-
-
-
-
 
 
 ```{r setup, include=FALSE}
@@ -108,7 +36,7 @@ printTest <- F
 translation.file <- 'input/European migration waffe - Sheet1.csv'
 
 iso2.sub <- c('CH', 'DE', 'IT', 'GB', 'ES', 'PT','AT', 'RO')
-infile <- "input/data_pop_2015.csv"
+infile <- "input/data_pop_2016.csv"
 
 library(readr)
 library(tidyr)
@@ -219,10 +147,10 @@ if(printTest) {
   head(eut, 20)
 }
 
-library(treemap)
-library(highcharter)
-
-dff <- treemap(eut, draw = T, index = c("continent", "citizen"), vSize = "totNat", type = "index")
+# library(treemap)
+# library(highcharter)
+# 
+# dff <- treemap(eut, draw = T, index = c("continent", "citizen"), vSize = "totNat", type = "index")
 ```
 
 
@@ -270,7 +198,12 @@ cit <- df %>% group_by(citizen_code) %>% summarise(tot = sum(share)) %>%
 colors <- c( "#dbd6db", "#e5dbcd",
             "#ab3d3f", "#666699", "#669999", "#663333", "#336666", "#366096", "#333366", "#996699", "#ac673e", "#3a9736", "#999966", "#666633", "#89a23a", "#368596", "#996666", 
             brewer.pal(name = "Set3", n = 12))
-cit$color <-  c(colors, colorRampPalette(colors = c("#336666", "#ab3d3f"))(nrow(cit)- length(colors)))
+if(nrow(cit) > length(colors)) {
+  cit$color <-  c(colors, colorRampPalette(colors = c("#336666", "#ab3d3f"))(nrow(cit)- length(colors)))  
+} else {
+  cit$color <- colors[1:nrow(cit)]
+}
+
 
 totF <- df %>% group_by(geo_code) %>% summarise(tot = sum(share)) %>% ungroup() %>% arrange(desc(tot))
 
@@ -336,7 +269,7 @@ for(lang in colnames(txt)) {
     )
   })
   
-  w.path <- paste0("output/waffle_chart_" , lang, ".png")
+  w.path <- paste0("output/waffle_chart_2016_" , lang, ".png")
   w.html <- paste0("waffle_charts_" , lang, ".html")
   
   png(w.path,  res = 250, pointsize = 12, height = 4700, 
@@ -369,7 +302,6 @@ for(lang in colnames(txt)) {
   # move stuff
   file.rename(from = w.html, to = paste0("output/", w.html))    
 }
-
 
     
 ```
