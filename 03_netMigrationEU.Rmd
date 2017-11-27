@@ -21,7 +21,7 @@ downloadData <- F
 translation.file <- "input/Crude net migration regional map - Sheet1.csv"
 
 eu.tgs00099.file <- "data/all_tgs00099.csv"
-eu.migration.file <- "data/migration.2014.csv"
+eu.migration.file <- "data/migration.2015.csv"
 eu.geodata.file <- "input/eurostat_NUTS_geodata.Rdata"
 
 colourText_bkbg <- '#262626'
@@ -73,7 +73,7 @@ if(downloadData) {
   write.csv(data, eu.tgs00099.file, row.names = F)
   data %<>% 
     filter(indic_de == "Crude rate of net migration plus statistical adjustment", 
-           time == 2014) %>% select(-time)
+           time == 2015) %>% select(-time)
   write.csv(data, eu.migration.file, row.names = F)
   
   # Get geospatial data
@@ -93,7 +93,6 @@ if(length(cidx > 0)) {
   txt <- txt[,-cidx, drop = F]
 }
 colnames(txt)
-
 
 
 ```
@@ -117,15 +116,14 @@ mapTheme <- function(
       panel.grid.minor = element_blank(),
       panel.border = element_blank(),
       plot.background = element_rect(fill = NULL),
-      legend.text = element_text(colour = colourText_bkbg, size = 6, hjust = 1, family = base_family),
-      legend.title = element_text(colour = colourText_bkbg, size = 9, family = base_family),
+      legend.text = element_text(colour = colourText_bkbg, size = 6, hjust = 1, family = "Open Sans Condensed"), ############# 
+      legend.title = element_text(colour = colourText_bkbg, size = 9, family = "Open Sans Condensed"),
       legend.key = element_blank(),
       legend.key.width = unit(0.9, "lines"),
       legend.key.height = unit(0.9, "lines"),
       legend.position=c(0.78, 0.71), 
       legend.justification=c(0, 1),
-      plot.margin = rep(unit(0,"null"),4),
-      panel.margin = unit(0,"null")
+      plot.margin = rep(unit(0,"null"),4)
     ) 
 }
 ```
@@ -134,9 +132,9 @@ mapTheme <- function(
 ```{r map}
 
 data$bins <- cut(data$values, 
-                 breaks = c(-Inf, -10, -7.5, -5, -2.5, 0, 2.5, 5, 7.5, 10, Inf), 
-                 labels = c("< -10", " -10 - -7.5", " -7.5 - 5", " -5 - 2.5", " -2.5 - 0", 
-                            "  0 - 2.5", "  2.5 - 5", "  5 - 7.5", "  7.5 - 10", "  > 10"))
+                 breaks = c(-Inf, -15, -12.5, -10, -7.5, -5, -2.5, 0, 2.5, 5, 7.5, 10, 12.5, 15, Inf), 
+                 labels = c("< -15", " -15  - -12.5", " -12.5 - -10", " -10  - -7.5", " -7.5 - -5", " -5   - -2.5", " -2.5 - 0", 
+                            "  0 - 2.5", "  2.5 - 5", "  5 - 7.5", "  7.5 - 10", "  10 - 12.5", " 12.5 - 15", "  > 15"))
 
   
 lang <- 'FR'
@@ -173,21 +171,23 @@ for(lang in colnames(txt)) {
     scale_x_continuous(limits = c(-10.5, 45.5), name = "", expand = c(0,0)) +
     scale_y_continuous(limits = c(33, 71.5), name = "", expand = c(0,0)) +
     #coord_quickmap(expand = F)  +  xlim(c(-11, 45)) + ylim(c(34, 71.5)) +
-    mapTheme(base_family = txt["base.font", lang]) + 
-    scale_fill_manual(values = swi_dpal3, name = paste0(txt['leg.title', lang], "  ")) +
-    geom_polygon(data = ct, aes(x=long,y=lat,group=group, id = group),
-                 fill =NA, colour = "#737373", size = 0.1)
-  
+    mapTheme(base_family = txt["base.font", lang], title_family = txt["title.font", lang]) + 
+    scale_fill_manual(values = swi_dpal3[c(1:6, 8, 11, 14:19)], name = paste0(txt['leg.title', lang], "  ")) +
+    geom_polygon(data = ct %>% filter(NUTS_ID != 'CH'), aes(x=long,y=lat,group=group, id = group),
+                 fill =NA, colour = "#737373", size = 0.17) + 
+    geom_polygon(data = ct %>% filter(NUTS_ID == 'CH'), aes(x=long,y=lat,group=group, id = group),
+                 fill =NA, colour = "#50494e", size = 0.24) 
+    
   tooltip_css <- "background-color:#f2f2f2;padding:0px;margin:0px;border-radius:5px;"
   hover_css <- "fill:#996666;"
   imap <- ggiraph(
     code = {print(map)}, 
     width = 1, 
     pointsize = 9,
-    zoom_max = 2, 
+  #  zoom_max = 2, 
     tooltip_extra_css = tooltip_css,
     hover_css = hover_css,
-    fonts = list(sans = "Open Sans")
+    fonts = list(sans = "Open Sans Condensed", serif = "Open Sans Condensed")
   )
   
   html.outfile <- paste0("regionalEUmap_netMigration_", lang, ".html")

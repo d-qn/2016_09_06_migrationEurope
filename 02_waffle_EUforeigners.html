@@ -188,7 +188,6 @@ eu$EUEFTA &lt;- eu$EFTA_FOR + eu$EU28_FOR
 eu %&lt;&gt;% select(-EFTA_FOR, -EU28_FOR) %&gt;% arrange(desc(values))
 
 
-
 eut &lt;- data %&gt;% filter(geo_code %in% eu.ct) %&gt;% group_by(citizen) %&gt;%
   summarise(totNat = sum(values)) %&gt;% ungroup() %&gt;% arrange(desc(totNat)) %&gt;%
   mutate(TOT = sum(totNat))
@@ -245,14 +244,16 @@ for(lang in colnames(txt)) {
     title &lt;- paste0(ifelse(iso == &quot;EU&quot;, txt['EU', lang], countryTranslation(iso, ifelse(lang == 'AR', 'EN', lang))[-1]), &quot;\n&quot;)
     pad &lt;- ncol - floor(sum(ddd$share) / nrow)
     
-    legend.text.size &lt;- ifelse(lang %in% c('ZH', 'JA'), 12.5, 16)
+    legend.text.size &lt;- ifelse(lang %in% c('ZH', 'JA'), 12, 14)
     
     suppressWarnings(
       waffle(
         dddd, rows = nrow , size=size, pad = pad, 
         colors = cit[match(ddd$citizen_code, cit$citizen_code), 'color'] %&gt;% 
-          unlist(use.names = F), legend_pos = &quot;top&quot;, 
-        title = title, xlab = &quot;\n&quot;) +
+          unlist(use.names = F), 
+        legend_pos = &quot;top&quot;, 
+        title = title, xlab = &quot;\n&quot;
+      ) +
         wtheme(title.font = txt[&quot;title.font&quot;, lang], base.font = txt[&quot;base.font&quot;, lang], legend.text.size = legend.text.size) + 
         guides(fill=guide_legend(nrow=2,byrow=F, title = paste0(pc, txt[&quot;subtitle1&quot;, lang])))
     )
@@ -261,9 +262,9 @@ for(lang in colnames(txt)) {
   w.path &lt;- paste0(&quot;output/waffle_chart_2016_&quot; , lang, &quot;.png&quot;)
   w.html &lt;- paste0(&quot;waffle_charts_&quot; , lang, &quot;.html&quot;)
   
-  png(w.path,  res = 250, pointsize = 12, height = 4700, 
+  png(w.path,  res = 250, pointsize = 12, height = 5400, 
       width = 2000)
-  iron( wf[[7]], wf[[1]], wf[[2]], wf[[3]], wf[[4]], wf[[5]], wf[[6]],  wf[[8]], wf[[9]])
+  iron( wf[[7]], wf[[1]], wf[[2]], wf[[3]], wf[[4]], wf[[5]], wf[[6]],  wf[[8]], wf[[9]],  wf[[10]])
   dev.off()
   
   source &lt;- paste0(
@@ -272,7 +273,7 @@ for(lang in colnames(txt)) {
     htmlLink(&quot;http://www.swissinfo.ch&quot;, 'swissinfo.ch'), &quot; | &quot;,
     htmlLink(&quot;https://twitter.com/duc_qn&quot;, '@duc_qn')    
   )
-  footer &lt;- paste0(txt[&quot;footer1&quot;, lang], &quot;&lt;br&gt;&quot;, txt[&quot;footer2&quot;, lang])
+  footer &lt;- paste0(txt[&quot;footer1&quot;, lang])#, &quot;&lt;br&gt;&quot;, txt[&quot;footer2&quot;, lang])
   
   save_html(
     tags$html(
@@ -299,6 +300,7 @@ for(lang in colnames(txt)) {
 ##  GB
 ##  IT
 ##  EU
+##  FR
 ##  PT
 ##  RO</code></pre>
 <pre><code>## 
@@ -309,6 +311,7 @@ for(lang in colnames(txt)) {
 ##  GB
 ##  IT
 ##  EU
+##  FR
 ##  PT
 ##  RO</code></pre>
 <pre><code>## 
@@ -319,6 +322,7 @@ for(lang in colnames(txt)) {
 ##  GB
 ##  IT
 ##  EU
+##  FR
 ##  PT
 ##  RO</code></pre>
 <pre><code>## 
@@ -329,6 +333,7 @@ for(lang in colnames(txt)) {
 ##  GB
 ##  IT
 ##  EU
+##  FR
 ##  PT
 ##  RO</code></pre>
 <pre><code>## 
@@ -339,6 +344,7 @@ for(lang in colnames(txt)) {
 ##  GB
 ##  IT
 ##  EU
+##  FR
 ##  PT
 ##  RO</code></pre>
 <pre><code>## 
@@ -349,6 +355,7 @@ for(lang in colnames(txt)) {
 ##  GB
 ##  IT
 ##  EU
+##  FR
 ##  PT
 ##  RO</code></pre>
 <pre><code>## 
@@ -359,6 +366,7 @@ for(lang in colnames(txt)) {
 ##  GB
 ##  IT
 ##  EU
+##  FR
 ##  PT
 ##  RO</code></pre>
 <pre><code>## 
@@ -369,6 +377,7 @@ for(lang in colnames(txt)) {
 ##  GB
 ##  IT
 ##  EU
+##  FR
 ##  PT
 ##  RO</code></pre>
 <pre><code>## 
@@ -379,6 +388,7 @@ for(lang in colnames(txt)) {
 ##  GB
 ##  IT
 ##  EU
+##  FR
 ##  PT
 ##  RO</code></pre>
 <pre><code>## 
@@ -389,6 +399,7 @@ for(lang in colnames(txt)) {
 ##  GB
 ##  IT
 ##  EU
+##  FR
 ##  PT
 ##  RO</code></pre>
 </div>

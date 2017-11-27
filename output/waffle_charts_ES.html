@@ -13,7 +13,7 @@ body, h1, h2, h3, h4, h5, h6, p, .descr, #cite, .footer {
    font-smoothing: antialiased;
    font-family: 'Open Sans Condensed', sans-serif;
    font-size: 17px;
-   margin:4px 0px 0px 2px;
+   margin:7px 1px 0px 3px;
 }
 
 #cite {
@@ -37,7 +37,7 @@ body, h1, h2, h3, h4, h5, h6, p, .descr, #cite, .footer {
 }
 
 .descr {
- font-size: 1.4em;
+ font-size: 1em;
  color: #4d4d4d;
  font-weight: lighter;
  max-width:98%;
@@ -50,22 +50,23 @@ h1 {
 }
 
 h2 {
-   font-size:2.1em;
-   line-height: 105%;
+   font-size:1.5em;
+   line-height: 107%;
    font-weight: bolder;
    max-width:96%;
    margin-left:0.7%;
+   margin-bottom: 5px;
 }
 
 h3 {
    max-width:98%;
-   font-size:1.5em;
+   font-size:1.2em;
    color: white;
    margin-left:0.7%;
-   margin-right:0.7%;
+   margin-right:30px;
    background-color: #C8C7C1;
-   line-height: 36px;
-   padding-left: 2px;
+   line-height: 33px;
+   padding-left: 10px;
 }
 
 h4 {
@@ -102,7 +103,7 @@ body {
 
 @media only screen and (max-width: 600px) {
     body {
-           font-size: 11px;
+           font-size: 14px;
     }
 }
 
@@ -113,12 +114,12 @@ body {
 <html>
   <body>
     <h2>Si estos países tuvieran 1 000 habitantes, su población extranjera estaría compuesta de…</h2>
-    <div class="descr">Nacionalidad de las personas que no tienen la nacionalidad del país donde residían en 2015. Los ciudadanos de la UE y la EFTA figuran a la izquierda del gráfico, seguidos de los ciudadanos de otros países.</div>
+    <div class="descr">Nacionalidad de las personas que no tienen la nacionalidad del país donde residían en 2016. Los ciudadanos de la UE y la EFTA figuran a la izquierda del gráfico, seguidos de los ciudadanos de otros países.</div>
     <h3>1 cuadrado = 1 persona. Por cada 1000 habitantes</h3>
     <div>
       <img src="waffle_chart_2016_ES.png" width="100%"/>
     </div>
-    <div class="footer">*EFTA: Asociación Europea de Libre Comercio, de la que son miembros Suiza, Liechtenstein, Noruega e Islandia.<br>UE-28: Unión Europea de 28, a excepción de Francia, Grecia, Hungría, Chipre, Luxemburgo, Malta y Polonia (de los que no hay datos disponibles).</div>
+    <div class="footer">*EFTA: Asociación Europea de Libre Comercio, de la que son miembros Suiza, Liechtenstein, Noruega e Islandia.</div>
     <div id="cite">Fuente: <a href="http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en" target="_blank">Eurostat</a> | código: <a href="https://github.com/hrbrmstr/waffle" target="_blank">waffle</a> | <a href="http://www.swissinfo.ch" target="_blank">swissinfo.ch</a> | <a href="https://twitter.com/duc_qn" target="_blank">@duc_qn</a></div>
     <script type="text/javascript" src="https://www.swissinfo.ch/static/Themes/basic/js/vendor/iframeResizer.contentWindow.3.5.3.min.js"></script>
   </body>
