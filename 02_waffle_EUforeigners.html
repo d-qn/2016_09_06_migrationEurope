@@ -262,7 +262,7 @@ for(lang in colnames(txt)) {
   w.path &lt;- paste0(&quot;output/waffle_chart_2016_&quot; , lang, &quot;.png&quot;)
   w.html &lt;- paste0(&quot;waffle_charts_&quot; , lang, &quot;.html&quot;)
   
-  png(w.path,  res = 250, pointsize = 12, height = 5400, 
+  png(w.path,  res = 250, pointsize = 12, height = 5370, 
       width = 2000)
   iron( wf[[7]], wf[[1]], wf[[2]], wf[[3]], wf[[4]], wf[[5]], wf[[6]],  wf[[8]], wf[[9]],  wf[[10]])
   dev.off()
@@ -273,7 +273,7 @@ for(lang in colnames(txt)) {
     htmlLink(&quot;http://www.swissinfo.ch&quot;, 'swissinfo.ch'), &quot; | &quot;,
     htmlLink(&quot;https://twitter.com/duc_qn&quot;, '@duc_qn')    
   )
-  footer &lt;- paste0(txt[&quot;footer1&quot;, lang])#, &quot;&lt;br&gt;&quot;, txt[&quot;footer2&quot;, lang])
+  footer &lt;- paste0(txt[&quot;footer1&quot;, lang], &quot; &quot;, txt[&quot;footer2&quot;, lang])
   
   save_html(
     tags$html(
@@ -281,7 +281,7 @@ for(lang in colnames(txt)) {
       tags$body(    
         h2(txt[&quot;title1&quot;, lang]),
         div(class = &quot;descr&quot;, HTML(txt[&quot;descr1&quot;, lang])),
-        h3(txt[&quot;h3&quot;, lang]),
+        h3(span(txt[&quot;h3&quot;, lang])),
         div(img(src = basename(w.path), width= &quot;100%&quot;)),
         div(class = &quot;footer&quot;, HTML(footer)),
         div(id = &quot;cite&quot;, HTML(source)),

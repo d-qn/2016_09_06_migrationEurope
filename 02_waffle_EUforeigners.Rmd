@@ -210,12 +210,12 @@ totF <- df %>% group_by(geo_code) %>% summarise(tot = sum(share)) %>% ungroup() 
 
 wtheme <- function(title.font = "OpenSans-CondensedBold", base.font = "OpenSans-CondensedLight", legend.text.size = 16) {
   theme(
-    plot.title = element_text(family = title.font, size = 20, margin = margin(b = 33), colour = "#404040"),
-    plot.margin = unit(c(0, 0, 0, 0), "cm"),
+    plot.title = element_text(family = title.font, size = 19, margin = margin(b = 37), colour = "#404040"),
+    plot.margin = unit(c(0, 0, 0, 0.03), "cm"),
     legend.title = element_text(family = base.font, size = 12, color = "#404040") ,
     legend.text = element_text(family = base.font, size = legend.text.size),
     legend.key.width = unit(1.6, "lines"),
-    legend.key.height = unit(1, "lines"),
+    legend.key.height = unit(1.1, "lines"),
     legend.position=c(-0.01,1.07), 
     legend.justification=c(0, 0)
   ) 
@@ -275,7 +275,7 @@ for(lang in colnames(txt)) {
   w.path <- paste0("output/waffle_chart_2016_" , lang, ".png")
   w.html <- paste0("waffle_charts_" , lang, ".html")
   
-  png(w.path,  res = 250, pointsize = 12, height = 5400, 
+  png(w.path,  res = 250, pointsize = 12, height = 5370, 
       width = 2000)
   iron( wf[[7]], wf[[1]], wf[[2]], wf[[3]], wf[[4]], wf[[5]], wf[[6]],  wf[[8]], wf[[9]],  wf[[10]])
   dev.off()
@@ -286,7 +286,7 @@ for(lang in colnames(txt)) {
     htmlLink("http://www.swissinfo.ch", 'swissinfo.ch'), " | ",
     htmlLink("https://twitter.com/duc_qn", '@duc_qn')    
   )
-  footer <- paste0(txt["footer1", lang])#, "<br>", txt["footer2", lang])
+  footer <- paste0(txt["footer1", lang], " ", txt["footer2", lang])
   
   save_html(
     tags$html(
@@ -294,7 +294,7 @@ for(lang in colnames(txt)) {
       tags$body(    
         h2(txt["title1", lang]),
         div(class = "descr", HTML(txt["descr1", lang])),
-        h3(txt["h3", lang]),
+        h3(span(txt["h3", lang])),
         div(img(src = basename(w.path), width= "100%")),
         div(class = "footer", HTML(footer)),
         div(id = "cite", HTML(source)),

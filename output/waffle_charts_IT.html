@@ -13,11 +13,11 @@ body, h1, h2, h3, h4, h5, h6, p, .descr, #cite, .footer {
    font-smoothing: antialiased;
    font-family: 'Open Sans Condensed', sans-serif;
    font-size: 17px;
-   margin:7px 1px 0px 3px;
+   margin:10px 0px 0px 2px;
 }
 
 #cite {
-    font-size: 0.7em;
+    font-size: 0.9em;
     font-weight: lighter;
     color: #4d4d4d;
     text-align: right;
@@ -29,7 +29,7 @@ body, h1, h2, h3, h4, h5, h6, p, .descr, #cite, .footer {
 
 
 .footer {
-  font-size: 1.1em;
+  font-size: 0.9em;
   color: #808080;
   margin-left:0.7%;
   margin-bottom:8px;
@@ -37,10 +37,10 @@ body, h1, h2, h3, h4, h5, h6, p, .descr, #cite, .footer {
 }
 
 .descr {
- font-size: 1em;
- color: #4d4d4d;
+ font-size: 1.1em;
+ color: #404040;
  font-weight: lighter;
- max-width:98%;
+ max-width:99%;
  margin-left:0.7%;
  margin-bottom:5px;
 }
@@ -50,23 +50,27 @@ h1 {
 }
 
 h2 {
-   font-size:1.5em;
-   line-height: 107%;
+   font-size:1.35em;
+   line-height: 110%;
    font-weight: bolder;
-   max-width:96%;
+   max-width:99%;
    margin-left:0.7%;
-   margin-bottom: 5px;
 }
 
 h3 {
    max-width:98%;
-   font-size:1.2em;
+   font-size:1.1em;
    color: white;
    margin-left:0.7%;
-   margin-right:30px;
-   background-color: #C8C7C1;
-   line-height: 33px;
-   padding-left: 10px;
+   margin-right:0.7%;
+   margin-bottom: 4px;
+}
+h3 span {
+     background-color: #7b949d;
+     padding-top: 3px;
+     padding-bottom: 4px;
+     padding-left: 5px;
+     padding-right: 7px;
 }
 
 h4 {
@@ -115,11 +119,13 @@ body {
   <body>
     <h2>Se questi paesi avessero 1000 abitanti, la loro popolazione straniera sarebbe composta di...</h2>
     <div class="descr">Nazionalità delle persone che non possiedono la cittadinanza del paese in cui risiedono nel 2016. Le nazionalità dell'UE e dell'AELS figurano sulla sinistra del grafico e in seguito quelle dei cittadini degli altri paesi.</div>
-    <h3>1 quadrato = 1 persona. Per mille abitanti.</h3>
+    <h3>
+      <span>1 quadrato = 1 persona. Per mille abitanti.</span>
+    </h3>
     <div>
       <img src="waffle_chart_2016_IT.png" width="100%"/>
     </div>
-    <div class="footer">* AELS: Associazione europea di libero scambio, che comprende la Svizzera, il Liechtenstein, la Norvegia e l'Islanda.</div>
+    <div class="footer">* AELS: Associazione europea di libero scambio, che comprende la Svizzera, il Liechtenstein, la Norvegia e l'Islanda. UE-28: Unione Europea dei 28</div>
     <div id="cite">Fonte: <a href="http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=migr_pop1ctz&lang=en" target="_blank">Eurostat</a> | Codice: <a href="https://github.com/hrbrmstr/waffle" target="_blank">waffle</a> | <a href="http://www.swissinfo.ch" target="_blank">swissinfo.ch</a> | <a href="https://twitter.com/duc_qn" target="_blank">@duc_qn</a></div>
     <script type="text/javascript" src="https://www.swissinfo.ch/static/Themes/basic/js/vendor/iframeResizer.contentWindow.3.5.3.min.js"></script>
   </body>

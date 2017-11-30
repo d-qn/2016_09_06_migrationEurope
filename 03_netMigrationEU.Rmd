@@ -116,12 +116,12 @@ mapTheme <- function(
       panel.grid.minor = element_blank(),
       panel.border = element_blank(),
       plot.background = element_rect(fill = NULL),
-      legend.text = element_text(colour = colourText_bkbg, size = 6, hjust = 1, family = "Open Sans Condensed"), ############# 
-      legend.title = element_text(colour = colourText_bkbg, size = 9, family = "Open Sans Condensed"),
+      legend.text = element_text(colour = colourText_bkbg, size = 9, hjust = 1, family = "Open Sans Condensed"), ############# 
+      legend.title = element_text(colour = colourText_bkbg, size = 11, family = "Open Sans Condensed"),
       legend.key = element_blank(),
       legend.key.width = unit(0.9, "lines"),
       legend.key.height = unit(0.9, "lines"),
-      legend.position=c(0.78, 0.71), 
+      legend.position=c(0.76, 0.71), 
       legend.justification=c(0, 1),
       plot.margin = rep(unit(0,"null"),4)
     ) 
